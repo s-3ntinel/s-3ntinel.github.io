@@ -10,6 +10,7 @@
 	list-style: none;
 	display: block;
 	position: relative;
+	background-color: white;
 }
 
 .nav-menu ul {
