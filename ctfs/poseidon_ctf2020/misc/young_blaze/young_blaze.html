@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Bash is fun</title>
+    <link type="text/css" href="/css/markdown.css" rel="stylesheet">
+    <link type="text/css" href="/css/nav.css" rel="stylesheet">
+    <link rel="icon" href="/favicon.ico">
+</head>
+
+<body id="preview">
+    <div style="padding-bottom: 40px;">
+        <nav>
+            <ul class="nav-menu nav-center">
+            <li><a href="https://github.com/s-3ntinel"><img src="/github_logo.png" /></a></li>
+            <li><a href="#">CTFs <i class="arrow down"></i></a>
+                <ul>
+                <li><a href="#">Fword_ctf2020 <i class="arrow right"></i></a>
+                    <ul>
+                    <li><a href="#">bash <i class="arrow right"></i></a>
+                        <ul>
+                        <li><a href="/ctfs/fword_ctf2020/bash/bash_is_fun.html">bash is fun</a></li>
+                        <li><a href="/ctfs/fword_ctf2020/bash/jail_boss.html">jail boss</a></li>
+                        </ul>
+                    </li>
+                    </ul>
+                </li>
+                <li><a href="#">Poseidon_ctf2020 <i class="arrow right"></i></a>
+                    <ul>
+                    <li><a href="#">misc <i class="arrow right"></i></a>
+                        <ul>
+                        <li><a href="/ctfs\poseidon_ctf2020\misc\young_blaze\young_blaze.html">young blaze</a></li>
+                        <li><a href="/ctfs\poseidon_ctf2020\misc\search\search.html">search</a></li>
+                        </ul>
+                    </li>
+                    </ul>
+                </li>
+                </ul>
+            </li>
+            <li><a href="#">Hach the box <i class="arrow down"></i></a>
+                <ul>
+                <li><a href="#">Challenges <i class="arrow right"></i></a>
+                    <ul>
+                    <li><a href="#">Web <i class="arrow right"></i></a>
+                        <ul>
+                        <li><a href="/hackthebox\challenges\web\baby_interdimensional_internet\baby_interdimensional_internet.html">Baby interdimensional internet</a></li>
+                        </ul>
+                    </li>
+                    </ul>
+                </li>
+                </ul>
+            </li>
+            </ul>
+        </nav>
+        <br />
+        <br />
+        <hr />    
+    </div>
+
+    <h1 class="code-line" data-line-start=0 data-line-end=1><a id="Young_Blaze_0"></a>Young Blaze</h1>
+    <p class="has-line-data" data-line-start="1" data-line-end="2">You are provided with a single file called Damn. You can run <code>file</code> command on it to figure out what it is.</p>
+    <pre><code class="has-line-data" data-line-start="4" data-line-end="7" class="language-sh">$ file Damn
+    Damn: ELF <span class="hljs-number">32</span>-bit LSB relocatable, Intel <span class="hljs-number">80386</span>, version <span class="hljs-number">1</span> (SYSV), not stripped
+    </code></pre>
+    <p class="has-line-data" data-line-start="8" data-line-end="9">As you can see, this is not an executable file but a relocatable file. So, the source was compiled without linking and produced an object file.</p>
+    <p class="has-line-data" data-line-start="10" data-line-end="11">In order to make it executable, you need to link it using some linker.</p>
+    <h1 class="code-line" data-line-start=12 data-line-end=13><a id="Method_1_12"></a>Method #1</h1>
+    <p class="has-line-data" data-line-start="13" data-line-end="14">Using <code>ld</code> (The GNU linker). Since this is a x32 object file you need to use 32-bit architecture while linking.</p>
+    <pre><code class="has-line-data" data-line-start="16" data-line-end="20">$ ld -m elf_i386 -s -o out Damn
+    $ cat out
+    Poseidon{L1nK_tH4T_$h17_im_0u7}
+    </code></pre>
+    <h1 class="code-line" data-line-start=21 data-line-end=22><a id="Method_2_21"></a>Method #2</h1>
+    <p class="has-line-data" data-line-start="22" data-line-end="23">Using <code>gcc</code> (The GNU C compiler). Since this is a x32 object file you need to use 32-bit architecture while linking. This object file already has essential startup functions defined so use <code>-nostartfiles</code> option. This method produces some linker warning but nonetheless produces the executable file.</p>
+    <pre><code class="has-line-data" data-line-start="25" data-line-end="29">-nostartfiles
+    
+    Do not use the standard system startup files when linking. The standard system libraries are used normally, unless -nostdlib or -nodefaultlibs is used. 
+    </code></pre>
+    <pre><code class="has-line-data" data-line-start="31" data-line-end="35">$ gcc -o out Damn -m32 -nostartfiles
+    $ cat out
+    Poseidon{L1nK_tH4T_$h17_im_0u7}
+    </code></pre>
+    <h1 class="code-line" data-line-start=36 data-line-end=37><a id="Yolo_Method_3_36"></a>Yolo Method #3</h1>
+    <p class="has-line-data" data-line-start="37" data-line-end="38">Running <code>strings</code> command on the file reveals interesting string at the beggining.</p>
+    <pre><code class="has-line-data" data-line-start="39" data-line-end="56">$ strings Damn
+    Ezfp|qz{nY${^Ja]!AJ1}$&quot;J|xJ%`&quot;h
+    .text:
+    .bss
+    .data
+    .shstrtab
+    .symtab
+    .strtab
+    .rel.text:
+    tiwini3ada!?
+    _start
+    music
+    _exit
+    result
+    secret
+    secret_len
+    </code></pre>
+    <p class="has-line-data" data-line-start="57" data-line-end="59">Maybe it’s the flag :)<br>
+    It’s worth the shot to paste it in Magic decoder at <a href="http://icyberchef.com/#recipe=Magic(3,true,false,'')">CyberChef</a></p>
+    <p class="has-line-data" data-line-start="60" data-line-end="61">Analysis revealed that the falg is XOR encrypted with <strong>HEX</strong> key of value <strong>15</strong></p>
+    <h1 class="code-line" data-line-start=62 data-line-end=63><a id="Flag_62"></a>Flag</h1>
+    <p class="has-line-data" data-line-start="63" data-line-end="64"><strong>Poseidon{L1nK_tH4T_$h17_im_0u7}</strong></p>
+    <p class="has-line-data" data-line-start="65" data-line-end="66">Easy challenge but you can learn about different ELF formats and about different stages of compilation :)</p>
+
+</body>
+
+</html>

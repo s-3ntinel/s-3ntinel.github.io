@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Bash is fun</title>
+    <link type="text/css" href="/css/markdown.css" rel="stylesheet">
+    <link type="text/css" href="/css/nav.css" rel="stylesheet">
+    <link rel="icon" href="/favicon.ico">
+</head>
+
+<body id="preview">
+    <div style="padding-bottom: 40px;">
+        <nav>
+            <ul class="nav-menu nav-center">
+            <li><a href="https://github.com/s-3ntinel"><img src="/github_logo.png" /></a></li>
+            <li><a href="#">CTFs <i class="arrow down"></i></a>
+                <ul>
+                <li><a href="#">Fword_ctf2020 <i class="arrow right"></i></a>
+                    <ul>
+                    <li><a href="#">bash <i class="arrow right"></i></a>
+                        <ul>
+                        <li><a href="/ctfs/fword_ctf2020/bash/bash_is_fun.html">bash is fun</a></li>
+                        <li><a href="/ctfs/fword_ctf2020/bash/jail_boss.html">jail boss</a></li>
+                        </ul>
+                    </li>
+                    </ul>
+                </li>
+                <li><a href="#">Poseidon_ctf2020 <i class="arrow right"></i></a>
+                    <ul>
+                    <li><a href="#">misc <i class="arrow right"></i></a>
+                        <ul>
+                        <li><a href="/ctfs\poseidon_ctf2020\misc\young_blaze\young_blaze.html">young blaze</a></li>
+                        <li><a href="/ctfs\poseidon_ctf2020\misc\search\search.html">search</a></li>
+                        </ul>
+                    </li>
+                    </ul>
+                </li>
+                </ul>
+            </li>
+            <li><a href="#">Hach the box <i class="arrow down"></i></a>
+                <ul>
+                <li><a href="#">Challenges <i class="arrow right"></i></a>
+                    <ul>
+                    <li><a href="#">Web <i class="arrow right"></i></a>
+                        <ul>
+                        <li><a href="/hackthebox\challenges\web\baby_interdimensional_internet\baby_interdimensional_internet.html">Baby interdimensional internet</a></li>
+                        </ul>
+                    </li>
+                    </ul>
+                </li>
+                </ul>
+            </li>
+            </ul>
+        </nav>
+        <br />
+        <br />
+        <hr />    
+    </div>
+
+    <h1 class="code-line" data-line-start=0 data-line-end=1><a id="Search__0"></a>Search !</h1>
+    <p class="has-line-data" data-line-start="1" data-line-end="2"><img src="challenge_description.png" alt="alt text"></p>
+    <p class="has-line-data" data-line-start="3" data-line-end="4"><img src="hint1.png" alt="alt text"></p>
+    <p class="has-line-data" data-line-start="5" data-line-end="6"><img src="hint2.png" alt="alt text"></p>
+    <p class="has-line-data" data-line-start="8" data-line-end="9">So basically find account of ‘iwd’ on the internet.</p>
+    <h1 class="code-line" data-line-start=10 data-line-end=11><a id="Sherlock_10"></a>Sherlock</h1>
+    <p class="has-line-data" data-line-start="11" data-line-end="12">Very good tool to find accounts on the internet is: <a href="https://github.com/sherlock-project/sherlock">Sherlock</a></p>
+    <pre><code class="has-line-data" data-line-start="14" data-line-end="16" class="language-sh">$ python3 sherlock iwd --print-found &gt; accounts.txt
+    </code></pre>
+    <p class="has-line-data" data-line-start="17" data-line-end="18">Searching for account <code>iwd</code> yielded many results but none of them seemed to give answer to the challenge, so i started from scratch.</p>
+    <h1 class="code-line" data-line-start=19 data-line-end=20><a id="Searching_manually_19"></a>Searching manually</h1>
+    <p class="has-line-data" data-line-start="20" data-line-end="23">I searched for the official website of the team that made this ctf: <a href="https://www.sousse.love/">from Sousse, with love</a><br>
+    There is a team section showing all team members. Bingo, there he is: <a href="https://www.sousse.love/authors/iwd/">iwd</a><br>
+    He has only FB and Instagram links. Facebook is broken and Instagram doesn’t have anything resulting in a flag. But we have his name.</p>
+    <p class="has-line-data" data-line-start="24" data-line-end="25">Basis google search yields couple answers. We are looking for social accounts so best matches are LinkedIn (flag not there) and Youtube.</p>
+    <p class="has-line-data" data-line-start="26" data-line-end="27">I searched his videos and comments but nothing useful there. He has a Youtube About page. The only interesting thing there is the e-mail. You have to be logged-in and solve a Captcha to view it but there is the flag :)</p>
+    <p class="has-line-data" data-line-start="28" data-line-end="29"><img src="iwd-yt.png" alt="alt text"></p>
+    <h1 class="code-line" data-line-start=30 data-line-end=31><a id="Flag_30"></a>Flag</h1>
+    <p class="has-line-data" data-line-start="31" data-line-end="32"><strong>Posedion{U_Sh0uld_D1g_B3tt3r}</strong></p>
+
+</body>
+
+</html>
