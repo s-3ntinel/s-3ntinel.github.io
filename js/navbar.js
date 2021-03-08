@@ -33,6 +33,7 @@ function loadNavbar() {
                 <li><a href="#">Web <i class="arrow right"></i></a>
                     <ul>
                     <li><a href="/hackthebox/challenges/web/baby_interdimensional_internet/baby_interdimensional_internet.html">Baby interdimensional internet</a></li>
+                    <li><a href="/hackthebox/challenges/web/weather_app/weather_app.html">Weather app</a></li>
                     </ul>
                 </li>
                 </ul>
