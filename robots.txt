@@ -1,2 +1,4 @@
 User-agent: *
 Allow: /
+
+Sitemap: https://s-3ntinel.github.io/sitemap.txt
