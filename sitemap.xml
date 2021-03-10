@@ -1,7 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
+<loc>https://s-3ntinel.github.io/index.html</loc>
+</url>
+<url>
+<loc>https://s-3ntinel.github.io/ctfs/fword_ctf2020/bash/bash_is_fun.html</loc>
+</url>
+<url>
+<loc>https://s-3ntinel.github.io/ctfs/fword_ctf2020/bash/jail_boss.html</loc>
+</url>
+<url>
+<loc>https://s-3ntinel.github.io/ctfs/poseidon_ctf2020/misc/search/search.html</loc>
+</url>
+<url>
+<loc>https://s-3ntinel.github.io/ctfs/poseidon_ctf2020/misc/young_blaze/young_blaze.html</loc>
+</url>
+<url>
+<loc>https://s-3ntinel.github.io/hackthebox/challenges/web/baby_interdimensional_internet/baby_interdimensional_internet.html</loc>
+</url>
+<url>
 <loc>https://s-3ntinel.github.io/hackthebox/challenges/web/weather_app/weather_app.html</loc>
-<lastmod>2021-01-01</lastmod>
 </url>
 </urlset>
