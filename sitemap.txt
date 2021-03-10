@@ -1,7 +1,7 @@
 https://s-3ntinel.github.io/index.html
-https://s-3ntinel.github.io/ctfs\fword_ctf2020\bash\bash_is_fun.html
-https://s-3ntinel.github.io/ctfs\fword_ctf2020\bash\jail_boss.html
-https://s-3ntinel.github.io/ctfs\poseidon_ctf2020\misc\search\search.html
-https://s-3ntinel.github.io/ctfs\poseidon_ctf2020\misc\young_blaze\young_blaze.html
-https://s-3ntinel.github.io/hackthebox\challenges\web\baby_interdimensional_internet\baby_interdimensional_internet.html
-https://s-3ntinel.github.io/hackthebox\challenges\web\weather_app\weather_app.html
+https://s-3ntinel.github.io/ctfs/fword_ctf2020/bash/bash_is_fun.html
+https://s-3ntinel.github.io/ctfs/fword_ctf2020/bash/jail_boss.html
+https://s-3ntinel.github.io/ctfs/poseidon_ctf2020/misc/search/search.html
+https://s-3ntinel.github.io/ctfs/poseidon_ctf2020/misc/young_blaze/young_blaze.html
+https://s-3ntinel.github.io/hackthebox/challenges/web/baby_interdimensional_internet/baby_interdimensional_internet.html
+https://s-3ntinel.github.io/hackthebox/challenges/web/weather_app/weather_app.html
