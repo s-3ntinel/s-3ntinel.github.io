@@ -175,4 +175,15 @@
 .down {
     transform: rotate(45deg);
     -webkit-transform: rotate(45deg);
-  }
+}
+
+#tags ul {
+	list-style: none;
+}
+
+#tags li {
+	padding: 7px;
+	font-style: italic;
+	display: inline;
+	background-color: blanchedalmond;
+}
