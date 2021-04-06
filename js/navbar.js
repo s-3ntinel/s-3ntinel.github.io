@@ -26,7 +26,7 @@ function loadNavbar() {
             </li>
             </ul>
         </li>
-        <li><a href="#">Hach the box <i class="arrow down"></i></a>
+        <li><a href="#">Hack the box <i class="arrow down"></i></a>
             <ul>
             <li><a href="#">Challenges <i class="arrow right"></i></a>
                 <ul>
