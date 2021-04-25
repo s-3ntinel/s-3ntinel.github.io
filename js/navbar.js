@@ -24,6 +24,28 @@ function loadNavbar() {
                 </li>
                 </ul>
             </li>
+            <li><a href="#">CyberApocalypse_ctf2021 <i class="arrow right"></i></a>
+                <ul>
+                <li><a href="#">web <i class="arrow right"></i></a>
+                    <ul>
+                    <li><a href="/ctfs/cyberapocalypse_ctf2021/web/blitzprop/blitzprop.html">Blitzprop</a></li>
+                    <li><a href="/ctfs/cyberapocalypse_ctf2021/web/bug_report/bug_report.html">Bug Report</a></li>
+                    <li><a href="/ctfs/cyberapocalypse_ctf2021/web/caas/caas.html">CaaS</a></li>
+                    <li><a href="/ctfs/cyberapocalypse_ctf2021/web/daas/daas.html">DaaS</a></li>
+                    <li><a href="/ctfs/cyberapocalypse_ctf2021/web/etree/etree.html">E.Tree</a></li>
+                    <li><a href="/ctfs/cyberapocalypse_ctf2021/web/ministryplace/ministryplace.html">MiniSTRyplace</a></li>
+                    <li><a href="/ctfs/cyberapocalypse_ctf2021/web/the_galactic_times/the_galactic_times.html">The Galactic Times</a></li>
+                    <li><a href="/ctfs/cyberapocalypse_ctf2021/web/wild_goose_hunt/wild_goose_hunt.html">Wild Goose Hunt</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">misc <i class="arrow right"></i></a>
+                    <ul>
+                    <li><a href="/ctfs/cyberapocalypse_ctf2021/misc/alien_camp/alien_camp.html">Alien Camp</a></li>
+                    <li><a href="/ctfs/cyberapocalypse_ctf2021/misc/build_yourself_in/build_yourself_in.html">Build yourself in</a></li>
+                    </ul>
+                </li>
+                </ul>
+            </li>
             </ul>
         </li>
         <li><a href="#">Hack the box <i class="arrow down"></i></a>

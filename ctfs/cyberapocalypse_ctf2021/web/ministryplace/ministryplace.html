@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MiniSTRyplace</title>
+    <link type="text/css" href="/css/markdown.css" rel="stylesheet">
+    <link type="text/css" href="/css/nav.css" rel="stylesheet">
+    <link rel="icon" href="/favicon.ico">
+</head>
+
+<body id="preview">
+    <div style="padding-bottom: 40px;">
+        <nav id="load-navbar"></nav>
+        <br />
+        <br />
+        <hr />    
+    </div>
+
+    <div id="tags">
+        <h5>Tags</h5>
+        <ul>
+            <li>LFI</li>
+            <li>str_replace bypass</li>
+        </ul>
+    </div>
+
+    <h1 class="code-line" data-line-start=0 data-line-end=1><a id="MiniSTRyplace_0"></a>MiniSTRyplace</h1>
+<h2 class="code-line" data-line-start=1 data-line-end=2><a id="Description_1"></a>Description</h2>
+<p class="has-line-data" data-line-start="2" data-line-end="3">Let’s read this website in the language of Alines. Or maybe not?</p>
+<h2 class="code-line" data-line-start=4 data-line-end=5><a id="Files_4"></a>Files</h2>
+<p class="has-line-data" data-line-start="5" data-line-end="6">Provided docker environment.</p>
+<h2 class="code-line" data-line-start=7 data-line-end=8><a id="Code_7"></a>Code</h2>
+<p class="has-line-data" data-line-start="8" data-line-end="9">A simple php webpage. The flag is in the root of the page.</p>
+<h3 class="code-line" data-line-start=10 data-line-end=11><a id="indexphp_10"></a><code>index.php</code></h3>
+<pre><code class="has-line-data" data-line-start="12" data-line-end="33" class="language-html"><span class="hljs-tag">&lt;<span class="hljs-title">html</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">header</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">meta</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">'author'</span> <span class="hljs-attribute">content</span>=<span class="hljs-value">'bertolis, makelaris'</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">title</span>&gt;</span>Ministry of Defence<span class="hljs-tag">&lt;/<span class="hljs-title">title</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">link</span> <span class="hljs-attribute">rel</span>=<span class="hljs-value">"stylesheet"</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">"/static/css/main.css"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">link</span> <span class="hljs-attribute">rel</span>=<span class="hljs-value">"stylesheet"</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">"https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/slate/bootstrap.min.css"</span>   &gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">header</span>&gt;</span>
+
+    <span class="hljs-tag">&lt;<span class="hljs-title">body</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"language"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">"?lang=en.php"</span>&gt;</span>EN<span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">"?lang=qw.php"</span>&gt;</span>QW<span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+
+    <span class="php"><span class="hljs-preprocessor">&lt;?php</span>
+    <span class="hljs-variable">$lang</span> = [<span class="hljs-string">'en.php'</span>, <span class="hljs-string">'qw.php'</span>];
+        <span class="hljs-keyword">include</span>(<span class="hljs-string">'pages/'</span> . (<span class="hljs-keyword">isset</span>(<span class="hljs-variable">$_GET</span>[<span class="hljs-string">'lang'</span>]) ? str_replace(<span class="hljs-string">'../'</span>, <span class="hljs-string">''</span>, <span class="hljs-variable">$_GET</span>[<span class="hljs-string">'lang'</span>]) : <span class="hljs-variable">$lang</span>[array_rand(<span class="hljs-variable">$lang</span>)]));
+    <span class="hljs-preprocessor">?&gt;</span></span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">html</span>&gt;</span>
+</code></pre>
+<h2 class="code-line" data-line-start=34 data-line-end=35><a id="Methodology_34"></a>Methodology</h2>
+<p class="has-line-data" data-line-start="35" data-line-end="36">We can select a page language, and the relevant <code>php</code> file gets included. We can use this to get <code>LFI</code>. We have to however bypass the <code>str_replace</code> which replaces <code>'../'</code> with <code>''</code>. We can use <code>'....//'</code> which gets replaced to <code>'../'</code>.</p>
+<h2 class="code-line" data-line-start=37 data-line-end=38><a id="Exploit_37"></a>Exploit</h2>
+<p class="has-line-data" data-line-start="38" data-line-end="39"><img src="./req.PNG" alt="req"></p>
+<h2 class="code-line" data-line-start=40 data-line-end=41><a id="Flag_40"></a>Flag</h2>
+<p class="has-line-data" data-line-start="41" data-line-end="42"><strong>CHTB{b4d_4li3n_pr0gr4m1ng}</strong></p>
+
+    <script src="/js/navbar.js"></script>
+</body>
+
+</html>

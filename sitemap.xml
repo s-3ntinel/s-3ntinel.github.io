@@ -1,24 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+<!-- index -->
 <url>
 <loc>https://s-3ntinel.github.io/index.html</loc>
 </url>
+
+<!-- fword_ctf2020 -->
 <url>
 <loc>https://s-3ntinel.github.io/ctfs/fword_ctf2020/bash/bash_is_fun.html</loc>
 </url>
 <url>
 <loc>https://s-3ntinel.github.io/ctfs/fword_ctf2020/bash/jail_boss.html</loc>
 </url>
+
+<!-- poseidon_ctf2020 -->
 <url>
 <loc>https://s-3ntinel.github.io/ctfs/poseidon_ctf2020/misc/search/search.html</loc>
 </url>
 <url>
 <loc>https://s-3ntinel.github.io/ctfs/poseidon_ctf2020/misc/young_blaze/young_blaze.html</loc>
 </url>
+
+<!-- cyberapocalypse_ctf2021 -->
+<url>
+<loc>http://s-3ntinel.github.io/ctfs/cyberapocalypse_ctf2021/web/blitzprop/blitzprop.html</loc>
+</url>
+<url>
+<loc>http://s-3ntinel.github.io/ctfs/cyberapocalypse_ctf2021/web/bug_report/bug_report.html</loc>
+</url>
+<url>
+<loc>http://s-3ntinel.github.io/ctfs/cyberapocalypse_ctf2021/web/caas/caas.html</loc>
+</url>
+<url>
+<loc>http://s-3ntinel.github.io/ctfs/cyberapocalypse_ctf2021/web/daas/daas.html</loc>
+</url>
+<url>
+<loc>http://s-3ntinel.github.io/ctfs/cyberapocalypse_ctf2021/web/etree/etree.html</loc>
+</url>
+<url>
+<loc>http://s-3ntinel.github.io/ctfs/cyberapocalypse_ctf2021/web/ministryplace/ministryplace.html</loc>
+</url>
+<url>
+<loc>http://s-3ntinel.github.io/ctfs/cyberapocalypse_ctf2021/web/the_galactic_times/the_galactic_times.html</loc>
+</url>
+<url>
+<loc>http://s-3ntinel.github.io/ctfs/cyberapocalypse_ctf2021/web/wild_goose_hunt/wild_goose_hunt.html</loc>
+</url>
+<url>
+<loc>http://s-3ntinel.github.io/ctfs/cyberapocalypse_ctf2021/misc/alien_camp/alien_camp.html</loc>
+</url>
+<url>
+<loc>http://s-3ntinel.github.io/ctfs/cyberapocalypse_ctf2021/misc/build_yourself_in/build_yourself_in.html</loc>
+</url>
+
+<!-- hackthebox -->
 <url>
 <loc>https://s-3ntinel.github.io/hackthebox/challenges/web/baby_interdimensional_internet/baby_interdimensional_internet.html</loc>
 </url>
 <url>
 <loc>https://s-3ntinel.github.io/hackthebox/challenges/web/weather_app/weather_app.html</loc>
 </url>
+
 </urlset>

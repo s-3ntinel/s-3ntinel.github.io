@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Alien Camp</title>
+    <link type="text/css" href="/css/markdown.css" rel="stylesheet">
+    <link type="text/css" href="/css/nav.css" rel="stylesheet">
+    <link rel="icon" href="/favicon.ico">
+</head>
+
+<body id="preview">
+    <div style="padding-bottom: 40px;">
+        <nav id="load-navbar"></nav>
+        <br />
+        <br />
+        <hr />    
+    </div>
+
+    <div id="tags">
+        <h5>Tags</h5>
+        <ul>
+            <li>nc</li>
+            <li>python socket</li>
+            <li>automation</li>
+            <li>game</li>
+        </ul>
+    </div>
+
+    <h1 class="code-line" data-line-start=0 data-line-end=1><a id="Alien_Camp_0"></a>Alien Camp</h1>
+<h2 class="code-line" data-line-start=1 data-line-end=2><a id="Description_1"></a>Description</h2>
+<p class="has-line-data" data-line-start="2" data-line-end="3">The Ministry of Galactic Defense now accepts human applicants for their specialised warrior unit, in exchange for their debt to be erased. We do not want to subject our people to this training and to be used as pawns in their little games. We need you to answer 500 of their questions to pass their test and take them down from the inside.</p>
+<h2 class="code-line" data-line-start=4 data-line-end=5><a id="Methodology_4"></a>Methodology</h2>
+<p class="has-line-data" data-line-start="5" data-line-end="6">This is an <code>nc</code> challenge without a source code. When we connect we get this.</p>
+<p class="has-line-data" data-line-start="7" data-line-end="8"><img src="./game.PNG" alt="game"></p>
+<p class="has-line-data" data-line-start="9" data-line-end="10">We get some emojis which have a number associated with them. Then we take a test and get an equation. The equation is however using those emojis, so we have to substitute them for numbers and solve the equation. However, we are too slow. We need a scripted approach.</p>
+<pre><code class="has-line-data" data-line-start="12" data-line-end="119" class="language-python"><span class="hljs-comment">#!/usr/bin/python3</span>
+                                                          
+<span class="hljs-keyword">import</span> socket               
+<span class="hljs-keyword">import</span> sys          
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">recvuntil</span><span class="hljs-params">(sock,delim = <span class="hljs-string">b"\n"</span>)</span> :</span>
+    data = <span class="hljs-string">b""</span>
+    <span class="hljs-keyword">while</span> <span class="hljs-keyword">not</span> data.endswith(delim):    
+      data += sock.recv(<span class="hljs-number">1</span>)
+    <span class="hljs-keyword">return</span> data 
+                                                          
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">sendline</span><span class="hljs-params">(sock,data)</span>:</span>    
+    sock.send(data + <span class="hljs-string">b'\n'</span>)
+    <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>                     
+                                                          
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">get_choices</span><span class="hljs-params">(data)</span>:</span>
+  choices = data[<span class="hljs-number">25</span>:len(data)-<span class="hljs-number">24</span>]
+
+  d = {}                                                                                                            
+  a = choices.split(<span class="hljs-string">b' '</span>)             
+                                                          
+  d[a[<span class="hljs-number">0</span>]] = a[<span class="hljs-number">2</span>]   
+  d[a[<span class="hljs-number">3</span>]] = a[<span class="hljs-number">5</span>]             
+  d[a[<span class="hljs-number">6</span>]] = a[<span class="hljs-number">8</span>]
+  d[a[<span class="hljs-number">9</span>]] = a[<span class="hljs-number">11</span>]            
+  d[a[<span class="hljs-number">12</span>]] = a[<span class="hljs-number">14</span>]
+  d[a[<span class="hljs-number">15</span>]] = a[<span class="hljs-number">17</span>] 
+  d[a[<span class="hljs-number">18</span>]] = a[<span class="hljs-number">20</span>]               
+  d[a[<span class="hljs-number">21</span>]] = a[<span class="hljs-number">23</span>]
+  d[a[<span class="hljs-number">24</span>]] = a[<span class="hljs-number">26</span>]            
+  d[a[<span class="hljs-number">27</span>]] = a[<span class="hljs-number">29</span>]
+                                                          
+  <span class="hljs-keyword">return</span> d
+
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">first_answer</span><span class="hljs-params">(s, data)</span>:</span>  
+  q = data.split(<span class="hljs-string">b'\n\n'</span>)[<span class="hljs-number">2</span>]
+  q = q[:len(q) - <span class="hljs-number">5</span>]
+                                                          
+  q1 = q.split(<span class="hljs-string">b' '</span>)
+                                                          
+  l = ([choices.get(n, n) <span class="hljs-keyword">for</span> n <span class="hljs-keyword">in</span> q1])
+  l = <span class="hljs-string">b''</span>.join(l)
+  l = l.decode()
+  print(l)
+  o = eval(l)               
+  print(o)      
+                                                          
+  o = bytes(str(o), <span class="hljs-string">'utf-8'</span>)
+  sendline(s, o)
+  data = recvuntil(s, <span class="hljs-string">b'Answer:'</span>)                                                                                   
+  print(data)
+
+  <span class="hljs-keyword">return</span> data
+
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">answer</span><span class="hljs-params">(s, data)</span>:</span>
+  q = data.split(<span class="hljs-string">b'\n\n'</span>)[<span class="hljs-number">1</span>]
+  q = q[:len(q) - <span class="hljs-number">5</span>]
+
+  q1 = q.split(<span class="hljs-string">b' '</span>)
+
+  l = ([choices.get(n, n) <span class="hljs-keyword">for</span> n <span class="hljs-keyword">in</span> q1])
+  l = <span class="hljs-string">b''</span>.join(l)
+  l = l.decode()
+  o = eval(l)
+
+  o = bytes(str(o), <span class="hljs-string">'utf-8'</span>)
+  sendline(s, o)
+  data = recvuntil(s, <span class="hljs-string">b'Answer:'</span>)
+  print(data)
+
+  <span class="hljs-keyword">return</span> data
+
+<span class="hljs-keyword">with</span> socket.socket(socket.AF_INET, socket.SOCK_STREAM) <span class="hljs-keyword">as</span> s:
+  s.connect((<span class="hljs-string">'138.68.178.56'</span>, <span class="hljs-number">31136</span>)) 
+  data = recvuntil(s, <span class="hljs-string">b'\n&gt;'</span>)
+  sendline(s, <span class="hljs-string">b'1'</span>)
+  data = recvuntil(s, <span class="hljs-string">b'\n&gt;'</span>)
+
+  choices = get_choices(data)
+
+  sendline(s, <span class="hljs-string">b'2'</span>)
+  data = recvuntil(s, <span class="hljs-string">b'Answer:'</span>)
+   
+  data = first_answer(s, data)
+
+  <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> range(<span class="hljs-number">498</span>):
+    data = answer(s, data)
+
+  print(<span class="hljs-string">'-------- Final answer'</span>)
+  q = data.split(<span class="hljs-string">b'\n\n'</span>)[<span class="hljs-number">1</span>]
+  q = q[:len(q) - <span class="hljs-number">5</span>]
+
+  q1 = q.split(<span class="hljs-string">b' '</span>)
+
+  l = ([choices.get(n, n) <span class="hljs-keyword">for</span> n <span class="hljs-keyword">in</span> q1])
+  l = <span class="hljs-string">b''</span>.join(l)
+  l = l.decode()
+  o = eval(l)
+
+  o = bytes(str(o), <span class="hljs-string">'utf-8'</span>)
+  sendline(s, o)
+  data = recvuntil(s, <span class="hljs-string">b'}'</span>)
+  print(data)
+</code></pre>
+<p class="has-line-data" data-line-start="120" data-line-end="121">We connect to the challenge with a <code>socket</code> and automate everything. First we parse the choices and create a <code>dict</code> for the emoji substitution. Them we perform 500 equations in a loop and at the and get a flag.</p>
+<p class="has-line-data" data-line-start="122" data-line-end="123"><img src="./solve.PNG" alt="solve"></p>
+<h2 class="code-line" data-line-start=124 data-line-end=125><a id="Flag_124"></a>Flag</h2>
+<p class="has-line-data" data-line-start="125" data-line-end="126"><strong>CHTB{3v3n_4l13n5_u53_3m0j15_t0_c0mmun1c4t3}</strong></p>
+
+    <script src="/js/navbar.js"></script>
+</body>
+
+</html>

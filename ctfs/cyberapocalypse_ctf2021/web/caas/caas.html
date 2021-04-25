@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CaaS</title>
+    <link type="text/css" href="/css/markdown.css" rel="stylesheet">
+    <link type="text/css" href="/css/nav.css" rel="stylesheet">
+    <link rel="icon" href="/favicon.ico">
+</head>
+
+<body id="preview">
+    <div style="padding-bottom: 40px;">
+        <nav id="load-navbar"></nav>
+        <br />
+        <br />
+        <hr />    
+    </div>
+
+    <div id="tags">
+        <h5>Tags</h5>
+        <ul>
+            <li>SSRF</li>
+            <li>cURL</li>
+            <li>exfiltration</li>
+            <li>webhook</li>
+        </ul>
+    </div>
+
+    <h1 class="code-line" data-line-start=0 data-line-end=1><a id="CaaS_0"></a>CaaS</h1>
+<h2 class="code-line" data-line-start=1 data-line-end=2><a id="Description_1"></a>Description</h2>
+<p class="has-line-data" data-line-start="2" data-line-end="3">cURL As A Service or CAAS is a brand new Alien application, built so that humans can test the status of their websites. However, it seems that the Aliens have not quite got the hang of Human programming and the application is riddled with issues.</p>
+<h2 class="code-line" data-line-start=4 data-line-end=5><a id="Files_4"></a>Files</h2>
+<p class="has-line-data" data-line-start="5" data-line-end="6">Provided docker environment.</p>
+<h2 class="code-line" data-line-start=7 data-line-end=8><a id="Code_7"></a>Code</h2>
+<h3 class="code-line" data-line-start=8 data-line-end=9><a id="indexphp_8"></a><code>index.php</code></h3>
+<pre><code class="has-line-data" data-line-start="10" data-line-end="18" class="language-php">[REDACTED]
+
+<span class="hljs-variable">$router</span> = <span class="hljs-keyword">new</span> Router();
+<span class="hljs-variable">$router</span>-&gt;new(<span class="hljs-string">'GET'</span>, <span class="hljs-string">'/'</span>, <span class="hljs-string">'<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="561523243a1539382224393a3a3324163f3832332e">[email&#160;protected]</a>'</span>);
+<span class="hljs-variable">$router</span>-&gt;new(<span class="hljs-string">'POST'</span>, <span class="hljs-string">'/api/curl'</span>, <span class="hljs-string">'<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="c586b0b7a986aaabb1b7aaa9a9a0b785a0bda0a6b0b1a0">[email&#160;protected]</a>'</span> );
+
+[REDACTED]
+</code></pre>
+<h3 class="code-line" data-line-start=19 data-line-end=20><a id="controllersCurlControllerphp_19"></a><code>controllers/CurlController.php</code></h3>
+<pre><code class="has-line-data" data-line-start="21" data-line-end="40" class="language-php"><span class="hljs-preprocessor">&lt;?php</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CurlController</span>
+</span>{
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">index</span><span class="hljs-params">(<span class="hljs-variable">$router</span>)</span>
+    </span>{
+        <span class="hljs-keyword">return</span> <span class="hljs-variable">$router</span>-&gt;view(<span class="hljs-string">'index'</span>);
+    }
+
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">execute</span><span class="hljs-params">(<span class="hljs-variable">$router</span>)</span>
+    </span>{
+        <span class="hljs-variable">$url</span> = <span class="hljs-variable">$_POST</span>[<span class="hljs-string">'ip'</span>];
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">isset</span>(<span class="hljs-variable">$url</span>)) {
+            <span class="hljs-variable">$command</span> = <span class="hljs-keyword">new</span> CommandModel(<span class="hljs-variable">$url</span>);
+            <span class="hljs-keyword">return</span> json_encode([ <span class="hljs-string">'message'</span> =&gt; <span class="hljs-variable">$command</span>-&gt;exec() ]);
+        }
+    }
+}
+</code></pre>
+<h3 class="code-line" data-line-start=41 data-line-end=42><a id="modelsCommandModelphp__41"></a><code>models/CommandModel.php</code></h3>
+<pre><code class="has-line-data" data-line-start="43" data-line-end="58" class="language-php"><span class="hljs-preprocessor">&lt;?php</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CommandModel</span>
+</span>{
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__construct</span><span class="hljs-params">(<span class="hljs-variable">$url</span>)</span>
+    </span>{
+        <span class="hljs-variable">$this</span>-&gt;command = <span class="hljs-string">"curl -sL "</span> . escapeshellcmd(<span class="hljs-variable">$url</span>);
+    }
+
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">exec</span><span class="hljs-params">()</span>
+    </span>{
+        exec(<span class="hljs-variable">$this</span>-&gt;command, <span class="hljs-variable">$output</span>);
+        <span class="hljs-keyword">return</span> <span class="hljs-variable">$output</span>;
+    }
+}
+</code></pre>
+<h2 class="code-line" data-line-start=59 data-line-end=60><a id="Methodology_59"></a>Methodology</h2>
+<p class="has-line-data" data-line-start="60" data-line-end="61">We can perform a <code>POST</code> request that does a <code>curl</code> request on the backend. Since there is <code>escapeshellcmd()</code> method, performing command injection goes out of the window. We can however use our own <code>curl</code> cmd options. We can use <code>-F</code> option to exfiltrate files from OS as a <code>POST</code> request.</p>
+<pre><code class="has-line-data" data-line-start="63" data-line-end="67">-F, --form &lt;name=content&gt;
+
+(HTTP SMTP IMAP) For HTTP protocol family, this lets curl emulate a filled-in form in which a user has pressed the submit button. This causes curl to POST data using the Content-Type multipart/form-data according to RFC 2388. This enables uploading of binary files etc. To force the 'content' part to be a file, prefix the file name with an @ sign.
+</code></pre>
+<p class="has-line-data" data-line-start="68" data-line-end="69">As a remote endpoint, we use <code>https://webhook.site/</code>.</p>
+<h2 class="code-line" data-line-start=70 data-line-end=71><a id="Exploit_70"></a>Exploit</h2>
+<p class="has-line-data" data-line-start="71" data-line-end="72"><img src="./burp.PNG" alt="burp"></p>
+<p class="has-line-data" data-line-start="73" data-line-end="74">We get a hit!</p>
+<p class="has-line-data" data-line-start="75" data-line-end="76"><img src="./webhook.PNG" alt="webhook"></p>
+<p class="has-line-data" data-line-start="77" data-line-end="78">The flag is in the file.</p>
+<p class="has-line-data" data-line-start="79" data-line-end="80"><img src="./aws.PNG" alt="aws"></p>
+<h2 class="code-line" data-line-start=81 data-line-end=82><a id="Flag_81"></a>Flag</h2>
+<p class="has-line-data" data-line-start="82" data-line-end="83"><strong>CHTB{f1le_r3trieval_4s_a_s3rv1ce}</strong></p>
+
+    <script src="/js/navbar.js"></script>
+</body>
+
+</html>

