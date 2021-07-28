@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Formatting</title>
+    <link type="text/css" href="/css/markdown.css" rel="stylesheet">
+    <link type="text/css" href="/css/nav.css" rel="stylesheet">
+    <link rel="icon" href="/favicon.ico">
+</head>
+
+<body id="preview">
+    <div style="padding-bottom: 40px;">
+        <nav id="load-navbar"></nav>
+        <br />
+        <br />
+        <hr />    
+    </div>
+
+    <div id="tags">
+        <h5>Tags</h5>
+        <ul>
+            <li>format string</li>
+            <li>introspection</li>
+        </ul>
+    </div>
+
+    <h1 class="code-line" data-line-start=0 data-line-end=1><a id="Formatting_0"></a>Formatting</h1>
+<h2 class="code-line" data-line-start=1 data-line-end=2><a id="Description_1"></a>Description</h2>
+<p class="has-line-data" data-line-start="2" data-line-end="3">Wait, I thought format strings were only in C???</p>
+<h2 class="code-line" data-line-start=4 data-line-end=5><a id="Files_4"></a>Files</h2>
+<p class="has-line-data" data-line-start="5" data-line-end="6">Provided source code</p>
+<h2 class="code-line" data-line-start=7 data-line-end=8><a id="Code_7"></a>Code</h2>
+<h3 class="code-line" data-line-start=8 data-line-end=9><a id="stonkspy_8"></a><code>stonks.py</code></h3>
+<pre><code class="has-line-data" data-line-start="10" data-line-end="42" class="language-python"><span class="hljs-comment">#!/usr/bin/env python3</span>
+
+art = <span class="hljs-string">'''
+                                         88
+            ,d                           88
+            88                           88
+,adPPYba, MM88MMM ,adPPYba,  8b,dPPYba,  88   ,d8  ,adPPYba,
+I8[    ""   88   a8"     "8a 88P'   `"8a 88 ,a8"   I8[    ""
+ `"Y8ba,    88   8b       d8 88       88 8888[      `"Y8ba,
+aa    ]8I   88,  "8a,   ,a8" 88       88 88`"Yba,  aa    ]8I
+`"YbbdP"'   "Y888 `"YbbdP"'  88       88 88   `Y8a `"YbbdP"'
+'''</span>
+
+flag = open(<span class="hljs-string">"flag.txt"</span>).read()
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">stonkgenerator</span>:</span> <span class="hljs-comment"># I heard object oriented programming is popular</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__init__</span><span class="hljs-params">(self)</span>:</span>
+        <span class="hljs-keyword">pass</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__str__</span><span class="hljs-params">(self)</span>:</span>
+        <span class="hljs-keyword">return</span> <span class="hljs-string">"stonks"</span>
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">main</span><span class="hljs-params">()</span>:</span>
+    print(art)
+    print(<span class="hljs-string">"Welcome to Stonks as a Service!"</span>)
+    print(<span class="hljs-string">"Enter any input, and we'll say it back to you with any '{a}' replaced with 'stonks'! Try it out!"</span>)
+    <span class="hljs-keyword">while</span> <span class="hljs-keyword">True</span>:
+        inp = input(<span class="hljs-string">"&gt; "</span>)
+        print(inp.format(a=stonkgenerator()))
+
+<span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">"__main__"</span>:
+    main()
+</code></pre>
+<h2 class="code-line" data-line-start=43 data-line-end=44><a id="Methodology_43"></a>Methodology</h2>
+<p class="has-line-data" data-line-start="44" data-line-end="45">Format string exploits exist in python too, which is the case here. By introspecion, we can ‘dive’ into object <code>a</code> and access global variables.</p>
+<h2 class="code-line" data-line-start=46 data-line-end=47><a id="Exploit_46"></a>Exploit</h2>
+<p class="has-line-data" data-line-start="47" data-line-end="48">Using <code>a.__init__.__globals__[flag]</code> we can access <code>__globals__</code> and access variable <code>flag</code>.</p>
+<p class="has-line-data" data-line-start="49" data-line-end="50"><img src="./payload.PNG" alt="payload"></p>
+<h2 class="code-line" data-line-start=51 data-line-end=52><a id="Flag_51"></a>Flag</h2>
+<p class="has-line-data" data-line-start="52" data-line-end="53"><strong>ictf{c4r3rul_w1th_f0rmat_str1ngs_4a2bd219}</strong></p>
+
+    <script src="/js/navbar.js"></script>
+</body>
+
+</html>

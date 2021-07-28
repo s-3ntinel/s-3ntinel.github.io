@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Spelling Test</title>
+    <link type="text/css" href="/css/markdown.css" rel="stylesheet">
+    <link type="text/css" href="/css/nav.css" rel="stylesheet">
+    <link rel="icon" href="/favicon.ico">
+</head>
+
+<body id="preview">
+    <div style="padding-bottom: 40px;">
+        <nav id="load-navbar"></nav>
+        <br />
+        <br />
+        <hr />    
+    </div>
+
+    <div id="tags">
+        <h5>Tags</h5>
+        <ul>
+            <li>english wordlist</li>
+            <li>scripting</li>
+        </ul>
+    </div>
+
+    <h1 class="code-line" data-line-start=0 data-line-end=1><a id="Spelling_Test_0"></a>Spelling Test</h1>
+<h2 class="code-line" data-line-start=2 data-line-end=3><a id="Description_2"></a>Description</h2>
+<p class="has-line-data" data-line-start="3" data-line-end="4">I made a spelling test for you, but with a twist. There are several words in words.txt that are misspelled by one letter only. Find the misspelled words, fix them, and find the letter that I changed. Put the changed letters together, and you get the flag. Make sure to insert the “{}” into the flag where it meets the format.</p>
+<p class="has-line-data" data-line-start="5" data-line-end="6">NOTE: the words are spelled in American English</p>
+<h2 class="code-line" data-line-start=7 data-line-end=8><a id="Files_7"></a>Files</h2>
+<p class="has-line-data" data-line-start="8" data-line-end="9">Provided set of misspelled words.</p>
+<h2 class="code-line" data-line-start=10 data-line-end=11><a id="Code_10"></a>Code</h2>
+<h3 class="code-line" data-line-start=11 data-line-end=12><a id="wordstxt_11"></a><code>words.txt</code></h3>
+<pre><code class="has-line-data" data-line-start="13" data-line-end="25">molecules
+guidelines
+cosmetics
+widescreen
+manufacture
+purchased
+frequencies
+convirgence
+successful
+conjunction
+...
+</code></pre>
+<h2 class="code-line" data-line-start=26 data-line-end=27><a id="Methodology_26"></a>Methodology</h2>
+<p class="has-line-data" data-line-start="27" data-line-end="28">We have to obtain a wordlist containing as many english words as possible to corelate it with the list of provided misspelled words and filter out the correct words. What will remain are the misspelled words from which we will get the flag.</p>
+<p class="has-line-data" data-line-start="29" data-line-end="30">I used this wordlist.</p>
+<p class="has-line-data" data-line-start="31" data-line-end="32"><a href="https://raw.githubusercontent.com/dwyl/english-words/master/words_alpha.txt">https://raw.githubusercontent.com/dwyl/english-words/master/words_alpha.txt</a></p>
+<h2 class="code-line" data-line-start=33 data-line-end=34><a id="Code_33"></a>Code</h2>
+<pre><code class="has-line-data" data-line-start="35" data-line-end="51" class="language-python"><span class="hljs-keyword">with</span> open(<span class="hljs-string">'words.txt'</span>) <span class="hljs-keyword">as</span> f:
+  w1 = f.readlines()
+
+<span class="hljs-keyword">with</span> open(<span class="hljs-string">'words_alpha.txt'</span>) <span class="hljs-keyword">as</span> f:
+  w2 = f.readlines()
+
+<span class="hljs-comment"># strip new lines</span>
+sw1 = [s.strip() <span class="hljs-keyword">for</span> s <span class="hljs-keyword">in</span> w1]
+sw2 = [s.strip() <span class="hljs-keyword">for</span> s <span class="hljs-keyword">in</span> w2]
+
+<span class="hljs-keyword">for</span> w <span class="hljs-keyword">in</span> sw1:
+  <span class="hljs-comment"># print misspelled word</span>
+  <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> w <span class="hljs-keyword">in</span> sw2:
+    print(w)
+
+</code></pre>
+<p class="has-line-data" data-line-start="52" data-line-end="53">Pipe the output to a file. For me the file contained 70 words. I had to manually scan the file and remove the remaining correct words that weren’t in the <code>words_alpha.txt</code>. Then go thought each misspelled word and mark down the wrong letter.</p>
+<h2 class="code-line" data-line-start=54 data-line-end=55><a id="Flag_54"></a>Flag</h2>
+<p class="has-line-data" data-line-start="55" data-line-end="56"><strong>ictf{youpassedthespellingtest}</strong></p>
+
+    <script src="/js/navbar.js"></script>
+</body>
+
+</html>

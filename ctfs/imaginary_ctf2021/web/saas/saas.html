@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SaaS</title>
+    <link type="text/css" href="/css/markdown.css" rel="stylesheet">
+    <link type="text/css" href="/css/nav.css" rel="stylesheet">
+    <link rel="icon" href="/favicon.ico">
+</head>
+
+<body id="preview">
+    <div style="padding-bottom: 40px;">
+        <nav id="load-navbar"></nav>
+        <br />
+        <br />
+        <hr />    
+    </div>
+
+    <div id="tags">
+        <h5>Tags</h5>
+        <ul>
+            <li>flask</li>
+            <li>sed</li>
+            <li>filter bypass</li>
+            <li>arbitrary read</li>
+        </ul>
+    </div>
+
+    <h1 class="code-line" data-line-start=0 data-line-end=1><a id="SaaS_0"></a>SaaS</h1>
+<h2 class="code-line" data-line-start=1 data-line-end=2><a id="Description_1"></a>Description</h2>
+<p class="has-line-data" data-line-start="2" data-line-end="3">Welcome to Sed as a Service! Now you can filter lorem ipsum to your heart’s desire!</p>
+<h2 class="code-line" data-line-start=4 data-line-end=5><a id="Files_4"></a>Files</h2>
+<p class="has-line-data" data-line-start="5" data-line-end="6">Provided source code</p>
+<h2 class="code-line" data-line-start=7 data-line-end=8><a id="Code_7"></a>Code</h2>
+<h3 class="code-line" data-line-start=8 data-line-end=9><a id="apppy_8"></a><code>app.py</code></h3>
+<pre><code class="has-line-data" data-line-start="10" data-line-end="29" class="language-python"><span class="hljs-keyword">from</span> flask <span class="hljs-keyword">import</span> Flask, render_template, request
+<span class="hljs-keyword">import</span> html
+<span class="hljs-keyword">import</span> os
+
+app = Flask(__name__)
+
+<span class="hljs-decorator">@app.route('/')</span>
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">index</span><span class="hljs-params">()</span>:</span>
+    <span class="hljs-keyword">return</span> render_template(<span class="hljs-string">'index.html'</span>)
+
+blacklist = [<span class="hljs-string">"flag"</span>, <span class="hljs-string">"cat"</span>, <span class="hljs-string">"|"</span>, <span class="hljs-string">"&amp;"</span>, <span class="hljs-string">";"</span>, <span class="hljs-string">"`"</span>, <span class="hljs-string">"$"</span>]
+
+<span class="hljs-decorator">@app.route('/backend')</span>
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">backend</span><span class="hljs-params">()</span>:</span>
+    <span class="hljs-keyword">for</span> word <span class="hljs-keyword">in</span> blacklist:
+        <span class="hljs-keyword">if</span> word <span class="hljs-keyword">in</span> request.args[<span class="hljs-string">'query'</span>]:
+            <span class="hljs-keyword">return</span> <span class="hljs-string">"Stop hacking.\n"</span>
+    <span class="hljs-keyword">return</span> html.escape(os.popen(f<span class="hljs-string">"sed {request.args['query']} stuff.txt"</span>).read())
+</code></pre>
+<h2 class="code-line" data-line-start=30 data-line-end=31><a id="Methodology_30"></a>Methodology</h2>
+<p class="has-line-data" data-line-start="31" data-line-end="32"><img src="./web.PNG" alt="web"></p>
+<p class="has-line-data" data-line-start="33" data-line-end="34">We can submit a query to be used in a <code>sed</code> command. The query will be used on the file <code>stuff.txt</code>. We cannot use disallowed chars in the <code>blacklist</code>. No way to end command and run our own or to pipe commands. We can however input our own file after the query like this.</p>
+<p class="has-line-data" data-line-start="35" data-line-end="36"><code>'s/hello/hewwo/g' lol.txt</code></p>
+<p class="has-line-data" data-line-start="37" data-line-end="38">which will form</p>
+<p class="has-line-data" data-line-start="39" data-line-end="40"><code>sed 's/hello/hewwo/g' lol.txt stuff.txt</code></p>
+<p class="has-line-data" data-line-start="41" data-line-end="42">using our filename and ignoring <code>stuff.txt</code>.</p>
+<p class="has-line-data" data-line-start="43" data-line-end="44">Flag is in <code>flag.txt</code> file but we cannot use the name <code>flag</code> because we will get blocked. Wildcards to the rescue! We can use <code>?</code> to substitute one character in the filename. Now we won’t get blocked.</p>
+<h2 class="code-line" data-line-start=45 data-line-end=46><a id="Exploit_45"></a>Exploit</h2>
+<p class="has-line-data" data-line-start="46" data-line-end="47">We send this input to the the flag <code>'s/x/x/g' fla?.txt</code></p>
+<p class="has-line-data" data-line-start="48" data-line-end="49"><img src="./q1.PNG" alt="q1"></p>
+<h2 class="code-line" data-line-start=50 data-line-end=51><a id="Loot_50"></a>Loot</h2>
+<p class="has-line-data" data-line-start="51" data-line-end="52"><img src="./q2.PNG" alt="q2"></p>
+<h2 class="code-line" data-line-start=53 data-line-end=54><a id="Flag_53"></a>Flag</h2>
+<p class="has-line-data" data-line-start="54" data-line-end="55"><strong>ictf{:roocu:roocu:roocu:roocu:roocu:roocursion:rsion:rsion:rsion:rsion:rsion:_473fc2d1}</strong></p>
+
+    <script src="/js/navbar.js"></script>
+</body>
+
+</html>

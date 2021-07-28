@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Lines</title>
+    <link type="text/css" href="/css/markdown.css" rel="stylesheet">
+    <link type="text/css" href="/css/nav.css" rel="stylesheet">
+    <link rel="icon" href="/favicon.ico">
+</head>
+
+<body id="preview">
+    <div style="padding-bottom: 40px;">
+        <nav id="load-navbar"></nav>
+        <br />
+        <br />
+        <hr />    
+    </div>
+
+    <div id="tags">
+        <h5>Tags</h5>
+        <ul>
+            <li>diffie-hellman</li>
+            <li>modinverse</li>
+        </ul>
+    </div>
+
+    <h1 class="code-line" data-line-start=0 data-line-end=1><a id="Lines_0"></a>Lines</h1>
+<h2 class="code-line" data-line-start=1 data-line-end=2><a id="Description_1"></a>Description</h2>
+<p class="has-line-data" data-line-start="2" data-line-end="3">Try to crack my unbreakable™ encryption! I based it off of the Diffie-Helman key exchange!</p>
+<h2 class="code-line" data-line-start=4 data-line-end=5><a id="Files_4"></a>Files</h2>
+<p class="has-line-data" data-line-start="5" data-line-end="6">Provided source code and encrypted messages.</p>
+<h2 class="code-line" data-line-start=7 data-line-end=8><a id="Code_7"></a>Code</h2>
+<h3 class="code-line" data-line-start=8 data-line-end=9><a id="linespy_8"></a><code>lines.py</code></h3>
+<pre><code class="has-line-data" data-line-start="10" data-line-end="30" class="language-python"><span class="hljs-keyword">from</span> Crypto.Util.number <span class="hljs-keyword">import</span> bytes_to_long
+<span class="hljs-keyword">import</span> random
+
+flag = bytes_to_long(open(<span class="hljs-string">"flag.txt"</span>, <span class="hljs-string">"rb"</span>).read())
+msg = bytes_to_long(<span class="hljs-string">b":roocursion:"</span>)
+
+p = <span class="hljs-number">82820875767540480278499859101602250644399117699549694231796720388646919033627</span>
+g = <span class="hljs-number">2</span>
+a = random.randint(<span class="hljs-number">0</span>, p)
+b = random.randint(<span class="hljs-number">0</span>, p)
+s = pow(pow(g, a, p), b, p)
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">encrypt</span><span class="hljs-params">(msg)</span>:</span>
+    <span class="hljs-keyword">return</span> (s*msg) % p
+
+print(f<span class="hljs-string">"{p = }"</span>)
+print(f<span class="hljs-string">"{encrypt(flag) = }"</span>)
+print(f<span class="hljs-string">"{encrypt(msg) = }"</span>)
+
+</code></pre>
+<h3 class="code-line" data-line-start=31 data-line-end=32><a id="linestxt_31"></a><code>lines.txt</code></h3>
+<pre><code class="has-line-data" data-line-start="33" data-line-end="37">p = 82820875767540480278499859101602250644399117699549694231796720388646919033627
+encrypt(flag) = 26128737736971786465707543446495988011066430691718096828312365072463804029545
+encrypt(msg) = 15673067813634207159976639166112349879086089811595176161282638541391245739514
+</code></pre>
+<h2 class="code-line" data-line-start=38 data-line-end=39><a id="Methodology_38"></a>Methodology</h2>
+<p class="has-line-data" data-line-start="39" data-line-end="40">This encryption method resembles diffie-hellman algorithm. We only get <code>p</code> and encrypted <code>flag</code> and <code>msg</code>. Encryption method <code>encrypt(msg)</code> uses a secret value <code>s</code> that we don’t know, <code>msg</code> that is a plaintext that we want to encrypt and <code>p</code> for modulo which is a big prime number. Since we are given a plaintext (<code>:roocursion:</code>) and its encrypted form, we have 2 (<code>msg</code>, <code>p</code>) out of 3 pieces of the algorithm. We can calculate <code>s</code> by reversing this encryption operation (known as <code>mod inverse</code>).</p>
+<p class="has-line-data" data-line-start="41" data-line-end="42">When we have <code>s</code> we can decrypt encrypted <code>flag</code> since again we now have 2 pieces (<code>s</code>, <code>p</code>) of the algorithm. Now we get plaintext flag.</p>
+<h2 class="code-line" data-line-start=43 data-line-end=44><a id="Code_43"></a>Code</h2>
+<pre><code class="has-line-data" data-line-start="45" data-line-end="59" class="language-python"><span class="hljs-keyword">from</span> Crypto.Util.number <span class="hljs-keyword">import</span> bytes_to_long, long_to_bytes
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">modinv</span><span class="hljs-params">(x, m)</span>:</span>
+  <span class="hljs-keyword">return</span> pow(x, -<span class="hljs-number">1</span>, m)
+
+msg = bytes_to_long(<span class="hljs-string">b":roocursion:"</span>)
+p = <span class="hljs-number">82820875767540480278499859101602250644399117699549694231796720388646919033627</span>
+enc_flag = <span class="hljs-number">26128737736971786465707543446495988011066430691718096828312365072463804029545</span>
+enc_msg = <span class="hljs-number">15673067813634207159976639166112349879086089811595176161282638541391245739514</span>
+
+s = (enc_msg * modinv(msg, p)) % p
+flag = (enc_flag * modinv(s, p)) % p
+print(long_to_bytes(flag))
+</code></pre>
+<h2 class="code-line" data-line-start=60 data-line-end=61><a id="Loot_60"></a>Loot</h2>
+<p class="has-line-data" data-line-start="61" data-line-end="62"><img src="./flag.PNG" alt="flag"></p>
+<h2 class="code-line" data-line-start=63 data-line-end=64><a id="Flag_63"></a>Flag</h2>
+<p class="has-line-data" data-line-start="64" data-line-end="65"><strong>ictf{m0d_4r1th_ftw_1c963241}</strong></p>
+
+    <script src="/js/navbar.js"></script>
+</body>
+
+</html>

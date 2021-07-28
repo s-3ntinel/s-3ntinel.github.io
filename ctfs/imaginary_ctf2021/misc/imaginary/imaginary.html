@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Imaginary</title>
+    <link type="text/css" href="/css/markdown.css" rel="stylesheet">
+    <link type="text/css" href="/css/nav.css" rel="stylesheet">
+    <link rel="icon" href="/favicon.ico">
+</head>
+
+<body id="preview">
+    <div style="padding-bottom: 40px;">
+        <nav id="load-navbar"></nav>
+        <br />
+        <br />
+        <hr />    
+    </div>
+
+    <div id="tags">
+        <h5>Tags</h5>
+        <ul>
+            <li>imaginary numbers</li>
+            <li>math</li>
+            <li>socket</li>
+            <li>forkbomb</li>
+        </ul>
+    </div>
+
+    <h1 class="code-line" data-line-start=0 data-line-end=1><a id="Imaginary_0"></a>Imaginary</h1>
+<h2 class="code-line" data-line-start=1 data-line-end=2><a id="Description_1"></a>Description</h2>
+<p class="has-line-data" data-line-start="2" data-line-end="3">What’s ImaginaryCTF without good old sqrt(-1)?</p>
+<h2 class="code-line" data-line-start=4 data-line-end=5><a id="Files_4"></a>Files</h2>
+<p class="has-line-data" data-line-start="5" data-line-end="6">Provided source code and <code>nc</code> address and port</p>
+<h2 class="code-line" data-line-start=7 data-line-end=8><a id="Code_7"></a>Code</h2>
+<h3 class="code-line" data-line-start=8 data-line-end=9><a id="imaginarypy_8"></a><code>imaginary.py</code></h3>
+<pre><code class="has-line-data" data-line-start="10" data-line-end="61" class="language-python"><span class="hljs-comment">#!/usr/bin/env python3</span>
+
+<span class="hljs-keyword">import</span> random
+<span class="hljs-keyword">from</span> solve <span class="hljs-keyword">import</span> solve
+
+banner = <span class="hljs-string">'''
+Welcome to the Imaginary challenge! I'm gonna give you 300 imaginary/complex number problems, and your job is to solve them all. Good luck!
+
+Sample input: (55+42i) + (12+5i) - (124+15i)
+Sample output: -57+32i
+
+Sample input: (23+32i) + (3+500i) - (11+44i)
+Sample output: 15+488i
+
+(NOTE: DO NOT USE eval() ON THE CHALLENGE OUTPUT. TREAT THIS IS UNTRUSTED INPUT. Every once in a while the challenge will attempt to forkbomb your system if you are using eval(), so watch out!)
+'''</span>
+
+flag = open(<span class="hljs-string">"flag.txt"</span>, <span class="hljs-string">"r"</span>).read()
+ops = [<span class="hljs-string">'+'</span>, <span class="hljs-string">'-'</span>]
+
+print(banner)
+
+<span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> range(<span class="hljs-number">300</span>):
+    o = random.randint(<span class="hljs-number">0</span>,<span class="hljs-number">50</span>)
+    <span class="hljs-keyword">if</span> o &gt; <span class="hljs-number">0</span>:
+        nums = []
+        chosen_ops = []
+        <span class="hljs-keyword">for</span> n <span class="hljs-keyword">in</span> range(random.randint(<span class="hljs-number">2</span>, i+<span class="hljs-number">2</span>)):
+            nums.append([random.randint(<span class="hljs-number">0</span>,<span class="hljs-number">50</span>), random.randint(<span class="hljs-number">0</span>,<span class="hljs-number">50</span>)])
+            chosen_ops.append(random.choice(ops))
+        out = <span class="hljs-string">""</span>
+        <span class="hljs-keyword">for</span> op, num <span class="hljs-keyword">in</span> zip(chosen_ops, nums):
+            out += f<span class="hljs-string">"({num[0]}+{num[1]}i) {op} "</span>
+        out = out[:-<span class="hljs-number">3</span>]
+        print(out)
+        ans = input(<span class="hljs-string">"&gt; "</span>)
+        <span class="hljs-keyword">if</span> ans.strip() == solve(out).strip():
+            print(<span class="hljs-string">"Correct!"</span>)
+        <span class="hljs-keyword">else</span>:
+            print(<span class="hljs-string">"That's incorrect. :("</span>)
+            exit()
+    <span class="hljs-keyword">else</span>:
+        n = random.choice(<span class="hljs-string">"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"</span>)
+        payload = f<span class="hljs-string">"__import__['os'].system('{n}(){{ {n}|{n} &amp; }};{{{n}}}')"</span>
+        print(payload)
+        input(<span class="hljs-string">"&gt; "</span>)
+        print(<span class="hljs-string">"Correct!"</span>)
+
+print(<span class="hljs-string">"You did it! Here's your flag!"</span>)
+print(flag)
+</code></pre>
+<h2 class="code-line" data-line-start=62 data-line-end=63><a id="Methodology_62"></a>Methodology</h2>
+<p class="has-line-data" data-line-start="63" data-line-end="64">This is a classic misc challenge where you have to communicate with the socket and solve some math in a quick manner using scripting. The challenge is about calculating simple imaginary numbers arithmetics. We will get 300 questions. The only challenge here is to parse the questions correctly. We cannot use <code>eval</code> because once in a while the program sends a fork bomb which would freeze our system.</p>
+<p class="has-line-data" data-line-start="65" data-line-end="66">Example of a problem</p>
+<p class="has-line-data" data-line-start="67" data-line-end="68"><img src="./math.PNG" alt="math"></p>
+<p class="has-line-data" data-line-start="69" data-line-end="70">Example of the fork bomb trap</p>
+<p class="has-line-data" data-line-start="71" data-line-end="72"><img src="./forkbomb.PNG" alt="forkbomb"></p>
+<h2 class="code-line" data-line-start=73 data-line-end=74><a id="Code_73"></a>Code</h2>
+<p class="has-line-data" data-line-start="74" data-line-end="75">The ultimate unreadable code :)</p>
+<pre><code class="has-line-data" data-line-start="77" data-line-end="139" class="language-python"><span class="hljs-comment">#!/usr/bin/env python3</span>
+                                                     
+<span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *
+<span class="hljs-keyword">import</span> re                                 
+                                                     
+host = <span class="hljs-string">'chal.imaginaryctf.org'</span>                                                                             
+port = <span class="hljs-number">42015</span>
+
+r = remote(host, port)
+
+run = <span class="hljs-number">1</span>
+<span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> range(<span class="hljs-number">301</span>):
+  <span class="hljs-keyword">if</span> i == <span class="hljs-number">300</span>:
+    c = r.recv()
+    print(c.decode())
+    <span class="hljs-keyword">break</span>
+
+  print(<span class="hljs-string">'runnnnn: '</span> + str(run))
+  run += <span class="hljs-number">1</span>
+  c = r.recvuntil(<span class="hljs-string">"&gt; "</span> )
+  print(c)
+
+  <span class="hljs-keyword">if</span> <span class="hljs-string">'__import__'</span> <span class="hljs-keyword">in</span> c.decode():
+    print(<span class="hljs-string">'--------------------------------------------------'</span>)
+    r.sendline(<span class="hljs-string">'df'</span>)
+    arit += <span class="hljs-number">2</span>
+    <span class="hljs-keyword">continue</span>
+
+  c = c.decode().split(<span class="hljs-string">'\n'</span>)
+  b = c[len(c) - <span class="hljs-number">2</span>]
+  
+  yo = b.split(<span class="hljs-string">' '</span>)
+  parts = b.split(<span class="hljs-string">' '</span>)[::<span class="hljs-number">2</span>]
+  
+  na, ia = <span class="hljs-number">0</span>, <span class="hljs-number">0</span>
+  arit = -<span class="hljs-number">1</span>
+  <span class="hljs-keyword">for</span> p <span class="hljs-keyword">in</span> parts:
+    <span class="hljs-keyword">if</span> arit == -<span class="hljs-number">1</span>:
+      mark = <span class="hljs-string">'+'</span>
+    <span class="hljs-keyword">else</span>:
+      mark = yo[arit]
+  
+    al = re.split(<span class="hljs-string">'[+-]'</span>, p)
+    n = al[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>:]
+    i = al[<span class="hljs-number">1</span>][:-<span class="hljs-number">2</span>]
+    arit += <span class="hljs-number">2</span>
+  
+    <span class="hljs-keyword">if</span> mark == <span class="hljs-string">'+'</span>:
+      na += int(n)
+      ia += int(i)
+    <span class="hljs-keyword">elif</span> mark == <span class="hljs-string">'-'</span>:
+      na -= int(n)
+      ia -= int(i)
+  
+  <span class="hljs-keyword">if</span>(ia &lt; <span class="hljs-number">0</span>):
+    x = str(na) + <span class="hljs-string">'-'</span> + str(abs(ia)) + <span class="hljs-string">'i'</span>
+    r.sendline(x)
+  
+  <span class="hljs-keyword">if</span>(ia &gt;= <span class="hljs-number">0</span>):
+    x = str(na) + <span class="hljs-string">'+'</span> + str(abs(ia)) + <span class="hljs-string">'i'</span>
+    r.sendline(x)
+</code></pre>
+<h2 class="code-line" data-line-start=140 data-line-end=141><a id="Loot_140"></a>Loot</h2>
+<p class="has-line-data" data-line-start="142" data-line-end="143"><img src="./flag.PNG" alt="flag"></p>
+<h2 class="code-line" data-line-start=144 data-line-end=145><a id="Flag_144"></a>Flag</h2>
+<p class="has-line-data" data-line-start="145" data-line-end="146"><strong>ictf{n1c3_y0u_c4n_4dd_4nd_subtr4ct!_49fd21bc}</strong></p>
+
+    <script src="/js/navbar.js"></script>
+</body>
+
+</html>

