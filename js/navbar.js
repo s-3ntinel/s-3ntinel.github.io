@@ -88,6 +88,7 @@ function loadNavbar() {
                     <li><a href="/hackthebox/challenges/web/baby_breaking_grad/baby_breaking_grad.html">Baby Breaking Grad</a></li>
                     <li><a href="/hackthebox/challenges/web/weather_app/weather_app.html">Weather app</a></li>
                     <li><a href="/hackthebox/challenges/web/waffle-y_order/waffle-y_order.html">WAFfle-y Order</a></li>
+                    <li><a href="/hackthebox/challenges/web/twodots_horror/twodots_horror.html">TwoDots Horror</a></li>
                     </ul>
                 </li>
                 </ul>
