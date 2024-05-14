@@ -2,7 +2,7 @@
 @import 'https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0-alpha2/katex.min.css';
 code {
 	color: #c7254e;
-	background-color: #f9f2f4;
+	background-color: #2e2e2e;
 	border-radius: 4px
 }
 
@@ -38,7 +38,7 @@ pre {
 pre code {
 	padding: 0;
 	font-size: inherit;
-	color: inherit;
+	color: #ffffff;
 	white-space: pre-wrap;
 	background-color: transparent;
 	border-radius: 0
@@ -1994,8 +1994,8 @@ table {
 
 html {
 	font-size: .875em;
-	background: #fff;
-	color: #373D49
+	background: #000;
+	color: #B8B8B9;
 }
 
 html,
@@ -2041,7 +2041,7 @@ pre {
 	font-size: 1rem;
 	padding: .66001rem 9.5px 9.5px;
 	line-height: 2rem;
-	background: linear-gradient(to bottom, #fff 0, #fff .75rem, #f5f7fa .75rem, #f5f7fa 2.75rem, #fff 2.75rem, #fff 4rem);
+	background: linear-gradient(to bottom,#000 0,#000 .75rem,#2e2e2e .75rem,#2e2e2e 2.75rem,#000 2.75rem,#000 4rem);
 	background-size: 100% 4rem;
 	border-color: #D3DAEA
 }
@@ -4949,7 +4949,7 @@ body {
 		font-size: .875em
 	}
 	body {
-		font-size: 1rem
+		font-size: 1.3rem
 	}
 	ul,
 	ol {
