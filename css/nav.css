@@ -83,7 +83,7 @@
 .nav-menu a:focus,
 .nav-menu li:hover a {
 	/* background: #555; */
-	color: black;
+	color: #B8B8B9;
 }
 
 
@@ -190,5 +190,7 @@
 	padding: 7px;
 	font-style: italic;
 	display: inline;
-	background-color: #c7254e;
+	/*background-color: #c7254e;*/
+	color: #c7254e;
+	background-color: #2e2e2e;
 }
