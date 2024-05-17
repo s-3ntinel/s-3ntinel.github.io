@@ -92,6 +92,7 @@ function loadNavbar() {
                     <li><a href="/hackthebox/challenges/web/no-threshold/no-threshold.html">No-Threshold <i class="gg-lock"></i></a></li>
                     <li><a href="/hackthebox/challenges/web/prying_eyes/prying_eyes.html">Prying Eyes <i class="gg-lock"></i></a></li>
                     <li><a href="/hackthebox/challenges/web/ws-todo/ws-todo.html">WS-Todo <i class="gg-lock"></i></a></li>
+                    <li><a href="/hackthebox/challenges/web/pdfy/pdfy.html">PDFy <i class="gg-lock"></i></a></li>
                     </ul>
                 </li>
                 </ul>
