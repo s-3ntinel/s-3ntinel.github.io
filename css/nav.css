@@ -194,3 +194,31 @@
 	color: #c7254e;
 	background-color: #2e2e2e;
 }
+
+.gg-lock {
+    box-sizing: border-box;
+    position: relative;
+    display: inline-block;
+    transform: scale(var(--ggs,1));
+    width: 8px;
+    height: 7px;
+    border: 2px solid;
+    border-top-right-radius: 50%;
+    border-top-left-radius: 50%;
+    border-bottom: transparent;
+	margin-left: 10px;
+	margin-bottom: 5px;
+}
+.gg-lock::after {
+    content: "";
+    display: inline-block;
+    box-sizing: border-box;
+    position: absolute;
+    width: 12px;
+    height: 6px;
+    border-radius: 2px;
+    border: 2px solid transparent;
+    box-shadow: 0 0 0 2px;
+    left: -4px;
+    top: 9px
+}
