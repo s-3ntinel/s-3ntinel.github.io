@@ -1,7 +1,29 @@
 function loadNavbar() {
     html_code = `
         <ul class="nav-menu nav-center">
-        <li><a href="https://github.com/s-3ntinel"><img src="/github_logo.png" /></a></li>
+        <li><a href="https://github.com/s-3ntinel" target=_blank><img src="/github_logo.png" /></a></li>
+        <li><a href="#">Hack the box <i class="arrow down"></i></a>
+            <ul>
+            <li><a href="#">Challenges <i class="arrow right"></i></a>
+                <ul>
+                <li><a href="#">Web <i class="arrow right"></i></a>
+                    <ul>
+                    <li><a href="/hackthebox/challenges/web/baby_interdimensional_internet/baby_interdimensional_internet.html">Baby interdimensional internet</a></li>
+                    <li><a href="/hackthebox/challenges/web/baby_breaking_grad/baby_breaking_grad.html">Baby Breaking Grad</a></li>
+                    <li><a href="/hackthebox/challenges/web/weather_app/weather_app.html">Weather app</a></li>
+                    <li><a href="/hackthebox/challenges/web/waffle-y_order/waffle-y_order.html">WAFfle-y Order</a></li>
+                    <li><a href="/hackthebox/challenges/web/twodots_horror/twodots_horror.html">TwoDots Horror</a></li>
+                    <li><a href="/hackthebox/challenges/web/ws-todo/ws-todo.html">WS-Todo</a></li>
+                    <li><a href="/hackthebox/challenges/web/no-threshold/no-threshold.html">No-Threshold <i class="gg-lock"></i></a></li>
+                    <li><a href="/hackthebox/challenges/web/prying_eyes/prying_eyes.html">Prying Eyes <i class="gg-lock"></i></a></li>
+                    <li><a href="/hackthebox/challenges/web/pdfy/pdfy.html">PDFy <i class="gg-lock"></i></a></li>
+                    <li><a href="/hackthebox/challenges/web/doxpit/doxpit.html">DoxPit <i class="gg-lock"></i></a></li>
+                    </ul>
+                </li>
+                </ul>
+            </li>
+            </ul>
+        </li>
         <li><a href="#">CTFs <i class="arrow down"></i></a>
             <ul>
             <li><a href="#">Fword_ctf2020 <i class="arrow right"></i></a>
@@ -72,27 +94,6 @@ function loadNavbar() {
                     <li><a href="/ctfs/imaginary_ctf2021/web/build_a_website/build_a_website.html">Build-a-website</a></li>
                     <li><a href="/ctfs/imaginary_ctf2021/web/destructoid/destructoid.html">Destructoid</a></li>
                     <li><a href="/ctfs/imaginary_ctf2021/web/saas/saas.html">SaaS</a></li>
-                    </ul>
-                </li>
-                </ul>
-            </li>
-            </ul>
-        </li>
-        <li><a href="#">Hack the box <i class="arrow down"></i></a>
-            <ul>
-            <li><a href="#">Challenges <i class="arrow right"></i></a>
-                <ul>
-                <li><a href="#">Web <i class="arrow right"></i></a>
-                    <ul>
-                    <li><a href="/hackthebox/challenges/web/baby_interdimensional_internet/baby_interdimensional_internet.html">Baby interdimensional internet</a></li>
-                    <li><a href="/hackthebox/challenges/web/baby_breaking_grad/baby_breaking_grad.html">Baby Breaking Grad</a></li>
-                    <li><a href="/hackthebox/challenges/web/weather_app/weather_app.html">Weather app</a></li>
-                    <li><a href="/hackthebox/challenges/web/waffle-y_order/waffle-y_order.html">WAFfle-y Order</a></li>
-                    <li><a href="/hackthebox/challenges/web/twodots_horror/twodots_horror.html">TwoDots Horror</a></li>
-                    <li><a href="/hackthebox/challenges/web/no-threshold/no-threshold.html">No-Threshold <i class="gg-lock"></i></a></li>
-                    <li><a href="/hackthebox/challenges/web/prying_eyes/prying_eyes.html">Prying Eyes <i class="gg-lock"></i></a></li>
-                    <li><a href="/hackthebox/challenges/web/ws-todo/ws-todo.html">WS-Todo <i class="gg-lock"></i></a></li>
-                    <li><a href="/hackthebox/challenges/web/pdfy/pdfy.html">PDFy <i class="gg-lock"></i></a></li>
                     </ul>
                 </li>
                 </ul>
