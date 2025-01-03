@@ -14,8 +14,8 @@ function loadNavbar() {
                     <li><a href="/hackthebox/challenges/web/waffle-y_order/waffle-y_order.html">WAFfle-y Order</a></li>
                     <li><a href="/hackthebox/challenges/web/twodots_horror/twodots_horror.html">TwoDots Horror</a></li>
                     <li><a href="/hackthebox/challenges/web/ws-todo/ws-todo.html">WS-Todo</a></li>
+                    <li><a href="/hackthebox/challenges/web/prying_eyes/prying_eyes.html">Prying Eyes</a></li>
                     <li><a href="/hackthebox/challenges/web/no-threshold/no-threshold.html">No-Threshold <i class="gg-lock"></i></a></li>
-                    <li><a href="/hackthebox/challenges/web/prying_eyes/prying_eyes.html">Prying Eyes <i class="gg-lock"></i></a></li>
                     <li><a href="/hackthebox/challenges/web/pdfy/pdfy.html">PDFy <i class="gg-lock"></i></a></li>
                     <li><a href="/hackthebox/challenges/web/doxpit/doxpit.html">DoxPit <i class="gg-lock"></i></a></li>
                     </ul>
